@@ -10,14 +10,15 @@ const upload = multer({dest: './uploads/'});
 const { post_list_get, post_get, post_post, post_update, post_delete } = require('../controllers/postController');
 const router = express.Router();
 
-router.get('/', post_list_get);
+// Group the routes to avoid duplicate route naming 
+router.route('/')
+  .get(post_list_get)
+  .post(upload.single('post'), post_post)
+  .put(post_update)
 
-router.get('/:postId', post_get);
 
-router.post('/',  upload.single('post'), post_post);
-
-router.put('/', post_update);
-
-router.delete('/:postId', post_delete);
+router.route('/:postId')
+  .get(post_get)
+  .delete(post_delete);
 
 module.exports = router;
