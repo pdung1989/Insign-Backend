@@ -1,5 +1,5 @@
 'use strict';
-// userRoute
+/* userRoute */
 const express = require('express');
 const { user_get, user_list_get, user_post } = require('../controllers/userController');
 const router = express.Router(); 
