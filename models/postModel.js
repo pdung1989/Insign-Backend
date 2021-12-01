@@ -36,8 +36,36 @@ const insertPost = async (post) => {
   }
 }
 
+const deletePost = async (postId) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'DELETE FROM post WHERE post_id = ?',
+      [postId]
+    );
+    console.log('model delete post', rows);
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.log('error', e.message);
+  }
+};
+
+const updatePost = async (post) => {
+  try {
+    console.log('update post', post);
+    const [rows] = await promisePool.execute(
+      'UPDATE post SET author = ?, title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ? WHERE post_id = ?',
+      [post.author, post.title, post.image, post.description, post.category_id, post.style_id, post.location, post.post_id]
+    );
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.log('error', e.message);
+  }
+};
+
 module.exports = {
   getAllPosts,
   getPost,
-  insertPost
+  insertPost,
+  deletePost,
+  updatePost,
 };

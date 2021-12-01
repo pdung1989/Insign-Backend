@@ -2,7 +2,7 @@
 /* postController*/
 
 // object detructuring, import only posts from postModel
-const { posts, getPost, getAllPosts, insertPost } = require('../models/postModel');
+const { getPost, getAllPosts, insertPost, deletePost, updatePost } = require('../models/postModel');
 
 const post_list_get = async (req, res) => {
   const posts = await getAllPosts();
@@ -21,8 +21,25 @@ const post_post = async (req, res) => {
   res.json(newPost);
 };
 
+// delete post
+const post_delete = async (req, res) => {
+  const deletedPost = await deletePost(req.params.postId);
+
+  res.json({message: 'post deleted', deletePost});
+};
+
+// update post
+const post_update = async (req, res) => {
+  const updatedPost = await updatePost(req.body);
+
+  res.json({message: 'post is updated'});
+}
+
+
 module.exports = {
   post_list_get,
   post_get,
   post_post,
+  post_delete,
+  post_update
 };

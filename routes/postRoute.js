@@ -7,7 +7,7 @@ const multer = require('multer');
 // create upload middleware
 const upload = multer({dest: './uploads/'});
 
-const { post_list_get, post_get, post_post } = require('../controllers/postController');
+const { post_list_get, post_get, post_post, post_update, post_delete } = require('../controllers/postController');
 const router = express.Router();
 
 router.get('/', post_list_get);
@@ -16,12 +16,8 @@ router.get('/:postId', post_get);
 
 router.post('/',  upload.single('post'), post_post);
 
-router.put('/:postId', (req, res) => {
-  res.send('From this endpoint you can update post.');
-});
+router.put('/', post_update);
 
-router.delete('/', (req, res) => {
-  res.send('From this endpoint you can delete posts.');
-});
+router.delete('/:postId', post_delete);
 
 module.exports = router;
