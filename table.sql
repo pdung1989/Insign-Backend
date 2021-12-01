@@ -27,6 +27,9 @@ CREATE TABLE `post` (
   `edited_date` date
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+INSERT INTO `post` (`author`, `title`, `image`, `description`, `category_id`, `style_id`, `location`, `posted_date`, `edited_date`) VALUES 
+('1', 'Some nice thing to post', 'http://placekitten.com/400/300', 'Nice cat', '0', '0', 'Finland', '2021-12-02', '2021-12-01');
+
 CREATE TABLE `likes` (
   `user_id` int NOT NULL,
   `post_id` int NOT NULL,
