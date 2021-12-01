@@ -1,5 +1,5 @@
 'use strict';
-// postRoute
+/* postRoute */
 const express = require('express');
 
 // multer module to handle multipart/form-data because express does not handle it

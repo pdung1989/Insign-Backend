@@ -2,14 +2,16 @@
 /* postController*/
 
 // object detructuring, import only posts from postModel
-const { posts, getPost } = require('../models/postModel');
+const { posts, getPost, getAllPosts } = require('../models/postModel');
 
-const post_list_get = (req, res) => {
+const post_list_get = async (req, res) => {
+  const posts = await getAllPosts();
+  console.log('all posts', posts);
   res.json(posts); //can use: res.send(posts)
 };
 
-const post_get = (req, res) => {
-  const post = getPost(req.params.postId);
+const post_get = async (req, res) => {
+  const post = await getPost(req.params.postId);
   res.json(post);
 }
 
