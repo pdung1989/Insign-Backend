@@ -2,7 +2,7 @@
 /* postController*/
 
 // object detructuring, import only posts from postModel
-const { posts, getPost, getAllPosts } = require('../models/postModel');
+const { posts, getPost, getAllPosts, insertPost } = require('../models/postModel');
 
 const post_list_get = async (req, res) => {
   const posts = await getAllPosts();
@@ -15,9 +15,10 @@ const post_get = async (req, res) => {
   res.json(post);
 }
 
-const post_post = (req, res) => {
+const post_post = async (req, res) => {
+  const newPost = await insertPost(req.body);
   console.log('add post data', req.body);
-  res.send('From this endpoint you can add post.');
+  res.json(newPost);
 };
 
 module.exports = {

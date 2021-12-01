@@ -27,9 +27,10 @@ const getPost = async (postId) => {
 const insertPost = async (post) => {
   try {
     const [rows] = await promisePool.execute(
-      'INSERT INTO post(author, title, image, description, category_id, style_id, location, posted_date, edited_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?), 
-      []'
+      'INSERT INTO post(author, title, image, description, category_id, style_id, location) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+      [post.author, post.title, post.image, post.description, post.category_id, post.style_id, post.location]
     );
+    return rows;
   } catch (e) {
     console.log('error', e.message);
   }
@@ -38,4 +39,5 @@ const insertPost = async (post) => {
 module.exports = {
   getAllPosts,
   getPost,
+  insertPost
 };
