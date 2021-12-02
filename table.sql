@@ -23,13 +23,13 @@ CREATE TABLE `post` (
   `category_id` int,
   `style_id` int,
   `location` text,
-  `posted_date` timestamp CURRENT_TIMESTAMP,
-  `edited_date` timestamp CURRENT_TIMESTAMP,
+  `posted_date` timestamp,
+  `edited_date` timestamp
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `likes` (
   `user_id` int NOT NULL,
-  `post_id` int NOT NULL,
+  `post_id` int NOT NULL
   PRIMARY KEY (`user_id`, `post_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -38,8 +38,8 @@ CREATE TABLE `comment` (
   `user_id` int,
   `post_id` int,
   `content` text,
-  `comment_date` timestamp CURRENT_TIMESTAMP,
-  `edited_date` timestamp CURRENT_TIMESTAMP,
+  `comment_date` timestamp,
+  `edited_date` timestamp
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `add_to_favorite` (

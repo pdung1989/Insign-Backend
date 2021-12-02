@@ -4,15 +4,14 @@ const express = require('express');
 const { user_get, user_list_get, user_post, user_delete, user_update } = require('../controllers/userController');
 const router = express.Router(); 
 
-router.get('/', user_list_get)
+router.route('/')
+  .get(user_list_get)
+  .post(user_post)
+  .put(user_update)
 
-router.get('/:userId', user_get);
-
-router.post('/', user_post);
-
-router.put('/', user_update);
-
-router.delete('/:userId', user_delete);
+router.route('/:userId')
+  .get(user_get)
+  .delete(user_delete)
 
 
 module.exports = router;
