@@ -7,7 +7,8 @@ const promisePool = pool.promise();
 // get all posts
 const getAllPosts = async () => {
   try {
-    const [rows] = await promisePool.execute('SELECT * FROM post');
+    const [rows] = await promisePool.execute(
+      'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location FROM post INNER JOIN insign_user as u ON u.user_id = post.author INNER JOIN category as c ON c.category_id = post.category_id INNER JOIN style as s ON s.style_id = post.style_id');
     return rows;
   } catch (e) {
     console.log('error', e.message);
