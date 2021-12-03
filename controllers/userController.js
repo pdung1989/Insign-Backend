@@ -1,5 +1,5 @@
 'use strict'
-const { getUser, getAllUsers, insertUser, updateUser, deleteUser } = require('../models/userModel');
+const { getUser, getAllUsers, insertUser, updateUser, deleteUser, getAllPostsOfUser } = require('../models/userModel');
  
 // get all users
 const user_list_get = async (req, res) => {
@@ -16,6 +16,11 @@ const user_get = async (req, res) => {
   res.json(user);
 }
 
+// get posts by userId
+const user_get_posts = async (req, res) =>  {
+  const userPosts = await getAllPostsOfUser(req.params.userId);
+  res.json(userPosts);
+}
 // add new user
 const user_post = async (req, res) => {
   const newUser = await insertUser(req.body);
@@ -41,4 +46,5 @@ module.exports = {
   user_post,
   user_delete,
   user_update,
+  user_get_posts,
 }

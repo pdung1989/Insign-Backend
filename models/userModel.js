@@ -26,6 +26,18 @@ const getUser = async (userId) => {
   }
 };
 
+//get all Posts of a user with number of comments and likes
+const getAllPostsOfUser = async (userId) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT post.post_id, post.title, post.image, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post.author = ?',
+      [userId]
+    );
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 // add new user
 const insertUser = async (user) => {
   try {
@@ -70,5 +82,6 @@ module.exports = {
   getUser,
   insertUser,
   deleteUser,
-  updateUser
+  updateUser,
+  getAllPostsOfUser,
 };
