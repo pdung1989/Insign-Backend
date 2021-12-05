@@ -65,8 +65,6 @@ const deletePost = async (postId) => {
 
 const updatePost = async (postId, post) => {
   try {
-    console.log('update post', post);
-    console.log('update post', postId);
     const [rows] = await promisePool.execute(
       'UPDATE post SET author = ?, title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ? WHERE post_id = ?',
       [

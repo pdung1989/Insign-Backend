@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const userRoute = require('./routes/userRoute');
 const postRoute = require('./routes/postRoute');
+const commentRoute = require('./routes/commentRoute');
 
 const app = express();
 const port = 3000;
@@ -15,5 +16,6 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 app.use('/post', postRoute);
 app.use('/user', userRoute);
+app.use('/comment', commentRoute);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

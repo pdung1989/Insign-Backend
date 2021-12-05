@@ -13,7 +13,6 @@ const {
 } = require('../models/postModel');
 
 const post_list_get = async (req, res) => {
-  console.log('def');
   const posts = await getAllPosts();
   console.log('all posts', posts);
   res.json(posts); //can use: res.send(posts)
