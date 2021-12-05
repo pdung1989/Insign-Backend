@@ -15,6 +15,7 @@ const getAllPosts = async () => {
     console.log('error', e.message);
   }
 };
+
 // get post by Id
 const getPost = async (postId) => {
   try {
@@ -85,10 +86,62 @@ const updatePost = async (postId, post) => {
   }
 };
 
+const getAllCommentsOfPost = async (postId) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT ', // TODO: sql
+      [postId]
+    );
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const searchPosts = async (req) => {
+  try {
+    let sqlQuery = 'SELECT * FROM post WHERE 1=1';
+
+    sqlQuery = buildSearchPostQuery(req, sqlQuery);
+
+    const [rows] = await promisePool.execute(sqlQuery);
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const buildSearchPostQuery = (req, sqlQuery) => {
+  if (req.query.userId) {
+    sqlQuery += ' AND author = ' + req.query.userId;
+  }
+
+  if (req.query.styleId) {
+    sqlQuery += ' AND style_id = ' + req.query.styleId;
+  }
+
+  if (req.query.categoryId) {
+    sqlQuery += ' AND category_id = ' + req.query.categoryId;
+  }
+
+  if (req.query.title) {
+    sqlQuery += " AND title like '%" + req.query.title + "%'";
+  }
+
+  if (req.query.location) {
+    sqlQuery += " AND location = '" + req.query.location + "'";
+  }
+
+  console.log(sqlQuery);
+  return sqlQuery;
+};
+
 module.exports = {
   getAllPosts,
   getPost,
   insertPost,
   deletePost,
   updatePost,
+  getAllCommentsOfPost,
+  searchPosts,
 };
