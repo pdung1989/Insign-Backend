@@ -8,7 +8,7 @@ const promisePool = pool.promise();
 const getAllPosts = async () => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location FROM post INNER JOIN insign_user as u ON u.user_id = post.author INNER JOIN category as c ON c.category_id = post.category_id INNER JOIN style as s ON s.style_id = post.style_id'
+      'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location FROM post INNER JOIN insign_user as u ON u.user_id = post.author INNER JOIN category as c ON c.category_id = post.category_id INNER JOIN style as s ON s.style_id = post.style_id ORDER BY RAND () LIMIT 9'
     );
     return rows;
   } catch (e) {
@@ -87,7 +87,7 @@ const updatePost = async (postId, post) => {
 const getAllCommentsOfPost = async (postId) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT ', // TODO: sql
+      'SELECT * FROM comment where post_id = ?',
       [postId]
     );
     return rows;
@@ -96,6 +96,7 @@ const getAllCommentsOfPost = async (postId) => {
   }
 };
 
+// search post 
 const searchPosts = async (req) => {
   try {
     let sqlQuery = 'SELECT * FROM post WHERE 1=1';
