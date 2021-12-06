@@ -11,7 +11,9 @@ const {
   getAllCommentsOfPost,
   searchPosts,
   getRandomPosts,
+  getLikesOfPost,
 } = require('../models/postModel');
+const { get } = require('../routes/postRoute');
 
 const post_list_get = async (req, res) => {
   const posts = await getAllPosts();
@@ -63,6 +65,12 @@ const post_random = async (req, res) => {
   res.json(posts);
 };
 
+// get number of likes of a post
+const post_get_likes = async (req, res) => {
+  const numberOfLikes = await getLikesOfPost(req.params.postId);
+  res.json(numberOfLikes);
+}
+
 module.exports = {
   post_list_get,
   post_get,
@@ -72,4 +80,5 @@ module.exports = {
   post_get_comments,
   post_search,
   post_random,
+  post_get_likes
 };

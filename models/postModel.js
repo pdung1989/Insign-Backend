@@ -1,6 +1,6 @@
 /* postModel TO HANDLE POST DATA */
 'use strict';
-const { pathToFileURL } = require('url');
+const { post_delete } = require('../controllers/postController');
 const pool = require('../database/db');
 const promisePool = pool.promise();
 
@@ -21,7 +21,7 @@ const getAllPosts = async () => {
 const getPost = async (postId) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT * FROM post WHERE post_id = ?',
+      'SELECT post_id, u.username AS author, title, image, description, location, posted_date, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post INNER JOIN insign_user as u ON u.user_id = post.author WHERE post_id = ?',
       [postId]
     );
     return rows[0];
@@ -151,6 +151,16 @@ const getRandomPosts = async (req) => {
   }
 };
 
+// get likes of a post
+
+const getLikesOfPost = async (postId, userId) =>  {
+  try {
+    const [rows] = await promisePool.execute('SELECT COUNT(user_id) FROM likes WHERE postId = ?', [postId])
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 module.exports = {
   getAllPosts,
   getPost,
@@ -160,4 +170,5 @@ module.exports = {
   getAllCommentsOfPost,
   searchPosts,
   getRandomPosts,
+  getLikesOfPost,
 };
