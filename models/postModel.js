@@ -21,7 +21,7 @@ const getAllPosts = async () => {
 const getPost = async (postId) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post_id, u.username AS author, title, image, description, location, posted_date, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post INNER JOIN insign_user as u ON u.user_id = post.author WHERE post_id = ?',
+      'SELECT post_id, author, title, image, description, location, posted_date, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post_id = ?',
       [postId]
     );
     return rows[0];
@@ -154,14 +154,17 @@ const getRandomPosts = async (req) => {
 };
 
 // get number of likes of a post
-const getLikesOfPost = async (postId) =>  {
+const getLikesOfPost = async (postId) => {
   try {
-    const [rows] = await promisePool.execute('SELECT COUNT(user_id) FROM likes WHERE postId = ?', [postId])
+    const [rows] = await promisePool.execute(
+      'SELECT COUNT(user_id) FROM likes WHERE postId = ?',
+      [postId]
+    );
     return rows;
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 module.exports = {
   getAllPosts,
