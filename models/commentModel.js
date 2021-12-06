@@ -55,6 +55,7 @@ const deleteComment = async (commentId) => {
   }
 };
 
+// update comment and update also edited_date with current timestamp
 const updateComment = async (commentId, comment) => {
   try {
     const [rows] = await promisePool.execute(

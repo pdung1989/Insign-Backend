@@ -1,5 +1,6 @@
 /* postModel TO HANDLE POST DATA */
 'use strict';
+const { pathToFileURL } = require('url');
 const pool = require('../database/db');
 const promisePool = pool.promise();
 
@@ -96,7 +97,7 @@ const getAllCommentsOfPost = async (postId) => {
   }
 };
 
-// search post 
+// search post
 const searchPosts = async (req) => {
   try {
     let sqlQuery = 'SELECT * FROM post WHERE 1=1';
@@ -135,6 +136,21 @@ const buildSearchPostQuery = (req, sqlQuery) => {
   return sqlQuery;
 };
 
+// get random posts
+const getRandomPosts = async (req) => {
+  try {
+    let sqlQuery =
+      'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location FROM post INNER JOIN insign_user as u ON u.user_id = post.author INNER JOIN category as c ON c.category_id = post.category_id INNER JOIN style as s ON s.style_id = post.style_id ORDER BY RAND ()';
+    if (req.query.limit) {
+      sqlQuery += ' LIMIT ' + req.query.limit;
+    }
+    const [rows] = await promisePool.execute(sqlQuery);
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   getAllPosts,
   getPost,
@@ -143,4 +159,5 @@ module.exports = {
   updatePost,
   getAllCommentsOfPost,
   searchPosts,
+  getRandomPosts,
 };

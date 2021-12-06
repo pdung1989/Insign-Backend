@@ -10,6 +10,7 @@ const {
   updatePost,
   getAllCommentsOfPost,
   searchPosts,
+  getRandomPosts,
 } = require('../models/postModel');
 
 const post_list_get = async (req, res) => {
@@ -56,6 +57,12 @@ const post_search = async (req, res) => {
   res.json(posts);
 };
 
+// get random posts and limit with query params
+const post_random = async (req, res) => {
+  const posts = await getRandomPosts(req);
+  res.json(posts);
+};
+
 module.exports = {
   post_list_get,
   post_get,
@@ -64,4 +71,5 @@ module.exports = {
   post_update,
   post_get_comments,
   post_search,
+  post_random,
 };
