@@ -17,7 +17,7 @@ const getAllPosts = async () => {
   }
 };
 
-// get post by Id
+// get post by Id, a post has author's name, numbers of likes and numbers of comments
 const getPost = async (postId) => {
   try {
     const [rows] = await promisePool.execute(
@@ -64,6 +64,7 @@ const deletePost = async (postId) => {
   }
 };
 
+// edit post and get current date time of edited_date
 const updatePost = async (postId, post) => {
   try {
     const [rows] = await promisePool.execute(
@@ -85,6 +86,7 @@ const updatePost = async (postId, post) => {
   }
 };
 
+// get all comments of a post
 const getAllCommentsOfPost = async (postId) => {
   try {
     const [rows] = await promisePool.execute(
@@ -136,7 +138,7 @@ const buildSearchPostQuery = (req, sqlQuery) => {
   return sqlQuery;
 };
 
-// get random posts
+// get random posts with limit numbers of post
 const getRandomPosts = async (req) => {
   try {
     let sqlQuery =
@@ -151,9 +153,8 @@ const getRandomPosts = async (req) => {
   }
 };
 
-// get likes of a post
-
-const getLikesOfPost = async (postId, userId) =>  {
+// get number of likes of a post
+const getLikesOfPost = async (postId) =>  {
   try {
     const [rows] = await promisePool.execute('SELECT COUNT(user_id) FROM likes WHERE postId = ?', [postId])
     return rows;
@@ -161,6 +162,7 @@ const getLikesOfPost = async (postId, userId) =>  {
     console.log(error.message);
   }
 }
+
 module.exports = {
   getAllPosts,
   getPost,
