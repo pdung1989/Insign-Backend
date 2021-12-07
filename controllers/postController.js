@@ -1,6 +1,6 @@
 'use strict';
 /* postController*/
-
+const httpError = require('../utils/errors');
 // object detructuring, import only posts from postModel
 const {
   getPost,
@@ -13,16 +13,24 @@ const {
   getRandomPosts,
   getLikesOfPost,
 } = require('../models/postModel');
-const { get } = require('../routes/postRoute');
 
-const post_list_get = async (req, res) => {
-  const posts = await getAllPosts();
-  console.log('all posts', posts);
-  res.json(posts); //can use: res.send(posts)
+const post_list_get = async (req, res, next) => {
+  const posts = await getAllPosts(next);
+  if(posts.length > 0) {
+    res.json(posts);
+  } else {
+    const err = httpError('Posts not found', 404);
+    next(err);
+  }
 };
 
-const post_get = async (req, res) => {
-  const post = await getPost(req.params.postId);
+const post_get = async (req, res, next) => {
+  const post = await getPost(req.params.postId, next);
+  if(!post) {
+    const err = httpError('Post not found', 404);
+    next(err);
+    return;
+  }
   res.json(post);
 };
 
@@ -47,9 +55,14 @@ const post_update = async (req, res) => {
 };
 
 // get comments by postId
-const post_get_comments = async (req, res) => {
-  const postComments = await getAllCommentsOfPost(req.params.postId);
-  res.json(postComments);
+const post_get_comments = async (req, res, next) => {
+  const postComments = await getAllCommentsOfPost(req.params.postId, next);
+  if(postComments.length > 0) {
+    res.json(postComments);
+  } else {
+    const err = httpError('Comments not found', 404);
+    next(err);
+  }
 };
 
 // search posts by query params
@@ -60,9 +73,14 @@ const post_search = async (req, res) => {
 };
 
 // get random posts and limit with query params
-const post_random = async (req, res) => {
-  const posts = await getRandomPosts(req);
-  res.json(posts);
+const post_random = async (req, res, next) => {
+  const posts = await getRandomPosts(req, next);
+  if(posts.length > 0) {
+    res.json(posts);
+  } else {
+    const err = httpError('Posts not found', 404);
+    next(err);
+  }
 };
 
 // get number of likes of a post
