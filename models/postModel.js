@@ -1,12 +1,12 @@
 /* postModel TO HANDLE POST DATA */
 'use strict';
-const { post_delete } = require('../controllers/postController');
 const pool = require('../database/db');
+const httpError = require('../utils/errors');
 const promisePool = pool.promise();
 
 // use async/await to handle fetching data
-// get all posts
-const getAllPosts = async () => {
+/* get all posts ---REMOVE? */
+const getAllPosts = async (next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location FROM post INNER JOIN insign_user as u ON u.user_id = post.author INNER JOIN category as c ON c.category_id = post.category_id INNER JOIN style as s ON s.style_id = post.style_id ORDER BY RAND () LIMIT 9'
@@ -14,11 +14,13 @@ const getAllPosts = async () => {
     return rows;
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
 // get post by Id, a post has author's name, numbers of likes and numbers of comments
-const getPost = async (postId) => {
+const getPost = async (postId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT post_id, author, title, image, description, location, posted_date, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post_id = ?',
@@ -27,6 +29,8 @@ const getPost = async (postId) => {
     return rows[0];
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
@@ -87,7 +91,7 @@ const updatePost = async (postId, post) => {
 };
 
 // get all comments of a post
-const getAllCommentsOfPost = async (postId) => {
+const getAllCommentsOfPost = async (postId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT c.comment_id, u.username, u.profile_picture, c.content, c.comment_date, c.edited_date FROM comment as c INNER JOIN insign_user as u ON u.user_id = c.user_id where post_id = ?',
@@ -96,6 +100,8 @@ const getAllCommentsOfPost = async (postId) => {
     return rows;
   } catch (error) {
     console.log(error.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
@@ -139,7 +145,7 @@ const buildSearchPostQuery = (req, sqlQuery) => {
 };
 
 // get random posts with limit numbers of post
-const getRandomPosts = async (req) => {
+const getRandomPosts = async (req, next) => {
   try {
     let sqlQuery =
       'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location FROM post INNER JOIN insign_user as u ON u.user_id = post.author INNER JOIN category as c ON c.category_id = post.category_id INNER JOIN style as s ON s.style_id = post.style_id ORDER BY RAND ()';
@@ -150,6 +156,8 @@ const getRandomPosts = async (req) => {
     return rows;
   } catch (error) {
     console.log(error.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 

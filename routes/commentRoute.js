@@ -1,6 +1,7 @@
 'use strict';
 /* commentRoute */
 const express = require('express');
+const { body } = require('express-validator');
 
 const {
   comment_list_get, comment_post, comment_get, comment_update, comment_delete,
@@ -10,11 +11,15 @@ const router = express.Router();
 
 router.route('/')
   .get(comment_list_get)
-  .post(comment_post);
+  .post(
+    body('content').notEmpty(),
+    comment_post);
 
 router.route('/:commentId')
   .get(comment_get)
-  .put(comment_update)
+  .put(
+    body('content').notEmpty(),
+    comment_update)
   .delete(comment_delete);
 
 module.exports = router;

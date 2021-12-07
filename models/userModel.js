@@ -32,7 +32,14 @@ const insertUser = async (user) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO insign_user(username, email, password, profile_picture, bio, role_id) VALUES(?, ?, ?, ?, ?, ?)',
-      [user.username, user.email, user.password, user.profile_picture, user.bio || null, user.role_id]
+      [
+        user.username,
+        user.email,
+        user.password,
+        user.profile_picture,
+        user.bio || null,
+        user.role_id,
+      ]
     );
     return rows;
   } catch (error) {
@@ -54,11 +61,19 @@ const deleteUser = async (userId) => {
 };
 
 // update user
-const updateUser = async (user) => {
+const updateUser = async (userId, user) => {
   try {
     const [rows] = await promisePool.execute(
       'UPDATE insign_user SET username = ?, email = ?, password = ?, profile_picture = ?, bio= ?, role_id = ? WHERE user_id = ?',
-      [user.username, user.email, user.password, user.profile_picture, user.bio || null, user.role_id, user.user_id]
+      [
+        user.username,
+        user.email,
+        user.password,
+        user.profile_picture,
+        user.bio || null,
+        user.role_id,
+        userId,
+      ]
     );
     return rows.affectedRows === 1;
   } catch (e) {

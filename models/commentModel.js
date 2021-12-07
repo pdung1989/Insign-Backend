@@ -5,7 +5,7 @@ const promisePool = pool.promise();
 
 // use async/await to handle fetching data
 // get all comments
-const getAllComments = async () => {
+const getAllComments = async (next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT * FROM comment'
@@ -13,11 +13,13 @@ const getAllComments = async () => {
     return rows;
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
 // get comment by Id
-const getComment = async (commentId) => {
+const getComment = async (commentId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT * FROM comment WHERE comment_id = ?',
@@ -26,6 +28,8 @@ const getComment = async (commentId) => {
     return rows[0];
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 

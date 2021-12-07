@@ -1,6 +1,7 @@
 'use strict';
 /* postController*/
 
+const httpError = require('../utils/errors');
 // object detructuring, import only posts from postModel
 const {
   getPost,
@@ -13,16 +14,26 @@ const {
   getRandomPosts,
   getLikesOfPost,
 } = require('../models/postModel');
-const { get } = require('../routes/postRoute');
 
-const post_list_get = async (req, res) => {
-  const posts = await getAllPosts();
-  console.log('all posts', posts);
-  res.json(posts); //can use: res.send(posts)
+/* REMOVE ?*/
+const post_list_get = async (req, res, next) => {
+  const posts = await getAllPosts(next);
+  if (posts.length === 0) {
+    const err = httpError('Posts not found', 404);
+    next(err);
+    return;
+  } 
+  res.json(posts);
 };
 
-const post_get = async (req, res) => {
-  const post = await getPost(req.params.postId);
+// get post by Id
+const post_get = async (req, res, next) => {
+  const post = await getPost(req.params.postId, next);
+  if (!post) {
+    const err = httpError('Post not found', 404);
+    next(err);
+    return;
+  }
   res.json(post);
 };
 
@@ -47,8 +58,14 @@ const post_update = async (req, res) => {
 };
 
 // get comments by postId
-const post_get_comments = async (req, res) => {
-  const postComments = await getAllCommentsOfPost(req.params.postId);
+const post_get_comments = async (req, res, next) => {
+  const postComments = await getAllCommentsOfPost(req.params.postId, next);
+  console.log('num of comments', postComments.length);
+  if (postComments.length === 0) {
+    const err = httpError('Comments not found', 404);
+    next(err);
+    return;
+  } 
   res.json(postComments);
 };
 
@@ -60,16 +77,20 @@ const post_search = async (req, res) => {
 };
 
 // get random posts and limit with query params
-const post_random = async (req, res) => {
-  const posts = await getRandomPosts(req);
-  res.json(posts);
+const post_random = async (req, res, next) => {
+  const posts = await getRandomPosts(req, next);
+  if (posts.length < 1) {
+    const err = httpError('Posts not found', 404);
+    next(err);
+    return;
+  } res.json(posts);
 };
 
 // get number of likes of a post
 const post_get_likes = async (req, res) => {
   const numberOfLikes = await getLikesOfPost(req.params.postId);
   res.json(numberOfLikes);
-}
+};
 
 module.exports = {
   post_list_get,
@@ -80,5 +101,5 @@ module.exports = {
   post_get_comments,
   post_search,
   post_random,
-  post_get_likes
+  post_get_likes,
 };
