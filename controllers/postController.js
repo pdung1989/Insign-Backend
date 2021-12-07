@@ -79,7 +79,7 @@ const post_search = async (req, res) => {
 // get random posts and limit with query params
 const post_random = async (req, res, next) => {
   const posts = await getRandomPosts(req, next);
-  if (posts.length < 1) {
+  if (posts.length === 0) {
     const err = httpError('Posts not found', 404);
     next(err);
     return;
