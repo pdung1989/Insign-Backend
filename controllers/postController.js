@@ -18,18 +18,18 @@ const {
 /* REMOVE ?*/
 const post_list_get = async (req, res, next) => {
   const posts = await getAllPosts(next);
-  if(posts.length > 0) {
-    res.json(posts);
-  } else {
+  if (posts.length < 1) {
     const err = httpError('Posts not found', 404);
     next(err);
-  }
+    return;
+  } 
+  res.json(posts);
 };
 
 // get post by Id
 const post_get = async (req, res, next) => {
   const post = await getPost(req.params.postId, next);
-  if(!post) {
+  if (!post) {
     const err = httpError('Post not found', 404);
     next(err);
     return;
@@ -60,12 +60,12 @@ const post_update = async (req, res) => {
 // get comments by postId
 const post_get_comments = async (req, res, next) => {
   const postComments = await getAllCommentsOfPost(req.params.postId, next);
-  if(postComments.length > 0) {
-    res.json(postComments);
-  } else {
+  if (postComments.length < 1) {
     const err = httpError('Comments not found', 404);
     next(err);
-  }
+    return;
+  } 
+  res.json(postComments);
 };
 
 // search posts by query params
@@ -78,19 +78,18 @@ const post_search = async (req, res) => {
 // get random posts and limit with query params
 const post_random = async (req, res, next) => {
   const posts = await getRandomPosts(req, next);
-  if(posts.length > 0) {
-    res.json(posts);
-  } else {
+  if (posts.length < 1) {
     const err = httpError('Posts not found', 404);
     next(err);
-  }
+    return;
+  } res.json(posts);
 };
 
 // get number of likes of a post
 const post_get_likes = async (req, res) => {
   const numberOfLikes = await getLikesOfPost(req.params.postId);
   res.json(numberOfLikes);
-}
+};
 
 module.exports = {
   post_list_get,
@@ -101,5 +100,5 @@ module.exports = {
   post_get_comments,
   post_search,
   post_random,
-  post_get_likes
+  post_get_likes,
 };
