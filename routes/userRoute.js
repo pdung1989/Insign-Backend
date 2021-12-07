@@ -38,9 +38,17 @@ router.route('/')
     body('email').isEmail(),
     body('password').matches('(?=.*[A-Z]).{8,}'),
     user_post)
-  .put(user_update);
+ ;
 
-router.route('/:userId').get(user_get).delete(user_delete);
+router.route('/:userId')
+  .get(user_get)
+  .delete(user_delete)
+  .put(
+    upload.single('user'),
+    body('username').isLength({ min: 3 }),
+    body('email').isEmail(),
+    body('password').matches('(?=.*[A-Z]).{8,}'),
+    user_update);
 
 router.get('/:userId/post', user_get_posts);
 

@@ -12,8 +12,12 @@ const user_list_get = async (req, res) => {
 // get user by userId
 const user_get = async (req, res) => {
   const user = await getUser(req.params.userId);
-  delete user.password;
-  res.json(user);
+  if (user) {
+    delete user.password;
+    res.json(user);
+  } else {
+    res.json({message: 'user not found'});
+  }
 }
 
 // add new user
@@ -30,7 +34,7 @@ const user_delete = async (req, res) => {
 
 // update user
 const user_update = async (req, res) => {
-  const updatedUser = await updateUser(req.body);
+  const updatedUser = await updateUser(req.params.userId, req.body);
 
   res.json({message: 'user is updated'});
 }
