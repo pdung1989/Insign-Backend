@@ -4,6 +4,7 @@ const cors = require('cors');
 const userRoute = require('./routes/userRoute');
 const postRoute = require('./routes/postRoute');
 const commentRoute = require('./routes/commentRoute');
+const categoryRoute = require('./routes/categoryRoute');
 const httpError = require('./utils/errors');
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use('/post', postRoute);
 app.use('/user', userRoute);
 app.use('/comment', commentRoute);
+app.use('/category', categoryRoute);
 
 //handling error
 app.use((req, res, next) => {
