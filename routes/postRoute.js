@@ -46,7 +46,13 @@ router.get('/search', post_search);
 
 router.route('/:postId')
   .get(post_get)
-  .put(post_update)
+  .put(
+    upload.single('post'),
+    body('author').notEmpty(),
+    body('title').notEmpty(),
+    body('category_id').isNumeric(),
+    body('style_id').isNumeric(),
+    post_update)
   .delete(post_delete);
 
 router.get('/:postId/comment', post_get_comments);

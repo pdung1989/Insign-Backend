@@ -17,7 +17,9 @@ router.route('/')
 
 router.route('/:commentId')
   .get(comment_get)
-  .put(comment_update)
+  .put(
+    body('content').notEmpty(),
+    comment_update)
   .delete(comment_delete);
 
 module.exports = router;
