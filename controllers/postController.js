@@ -18,7 +18,7 @@ const {
 /* REMOVE ?*/
 const post_list_get = async (req, res, next) => {
   const posts = await getAllPosts(next);
-  if (posts.length < 1) {
+  if (posts.length === 0) {
     const err = httpError('Posts not found', 404);
     next(err);
     return;
@@ -60,7 +60,7 @@ const post_update = async (req, res) => {
 // get comments by postId
 const post_get_comments = async (req, res, next) => {
   const postComments = await getAllCommentsOfPost(req.params.postId, next);
-  if (postComments.length < 1) {
+  if (postComments.length === 0) {
     const err = httpError('Comments not found', 404);
     next(err);
     return;

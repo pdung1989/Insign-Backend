@@ -6,7 +6,7 @@ const httpError = require('../utils/errors');
 // get all comments
 const comment_list_get = async (req, res, next) => {
     const comments = await getAllComments(next);
-    if(comments.length < 1 ) {
+    if(comments.length === 0 ) {
       const err = httpError('Comments not found', 404);
       next(err);
       return;

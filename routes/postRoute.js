@@ -1,11 +1,21 @@
 'use strict';
 /* postRoute */
 const express = require('express');
+const { body } = require('express-validator');
 
 // multer module to handle multipart/form-data because express does not handle it
 const multer = require('multer');
+
+//validate file type with fileFilter
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.includes('image')) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
 // create upload middleware
-const upload = multer({ dest: './uploads/' });
+const upload = multer({ dest: './uploads/', fileFilter});
 
 const {
   post_list_get,
@@ -18,10 +28,19 @@ const {
   post_random,
   post_get_likes
 } = require('../controllers/postController');
+
 const router = express.Router();
 
 // Group the routes to avoid duplicate route naming
-router.route('/').get(post_random).post(upload.single('post'), post_post);
+router.route('/')
+  .get(post_random)
+  .post(
+    upload.single('post'),
+    body('author').notEmpty(),
+    body('title').notEmpty(),
+    body('category_id').isNumeric(),
+    body('style_id').isNumeric(),
+    post_post);
 
 router.get('/search', post_search);
 
