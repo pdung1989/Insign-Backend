@@ -10,7 +10,9 @@ const router = express.Router();
 
 router.route('/')
   .get(comment_list_get)
-  .post(comment_post);
+  .post(
+    body('content').notEmpty(),
+    comment_post);
 
 router.route('/:commentId')
   .get(comment_get)
