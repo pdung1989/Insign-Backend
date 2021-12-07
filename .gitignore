@@ -103,5 +103,14 @@ dist
 # TernJS port file
 .tern-port
 
-# Ingnore empty file
-.gitkeep
+# Ignore empty file
+controllers/.gitkeep
+database/.gitkeep
+models/.gitkeep
+routes/.gitkeep
+utils/.gitkeep
+
+# ignore content of uploads folder
+uploads/*
+# except one (empty) file to have the folder in version control
+!uploads/.gitkeep

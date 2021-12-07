@@ -1,25 +1,89 @@
 'use strict';
 
-const users = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@metropolia.fi',
-    password: '1234',
-  },
-  {
-    id: '2',
-    name: 'Jane Doez',
-    email: 'jane@metropolia.fi',
-    password: 'qwer',
-  },
-];
+// access database
+const pool = require('../database/db');
+const promisePool = pool.promise();
 
-const getUser = (userId) => {
-  return users.find(user => user.id == userId);
+// get all users
+const getAllUsers = async () => {
+  try {
+    const [rows] = await promisePool.execute('SELECT * FROM insign_user');
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// get user by Id
+const getUser = async (userId) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT * FROM insign_user where user_id = ?',
+      [userId]
+    );
+    return rows[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// add new user
+const insertUser = async (user) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'INSERT INTO insign_user(username, email, password, profile_picture, bio, role_id) VALUES(?, ?, ?, ?, ?, ?)',
+      [user.username, user.email, user.password, user.profile_picture, user.bio || null, user.role_id]
+    );
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// delete user
+const deleteUser = async (userId) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'DELETE FROM insign_user WHERE user_id = ?',
+      [userId]
+    );
+    return rows.affectedRows === 1;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// update user
+const updateUser = async (user) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'UPDATE insign_user SET username = ?, email = ?, password = ?, profile_picture = ?, bio= ?, role_id = ? WHERE user_id = ?',
+      [user.username, user.email, user.password, user.profile_picture, user.bio || null, user.role_id, user.user_id]
+    );
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.error('model update user', e.message);
+  }
+};
+
+//get all Posts of a user with number of comments and likes
+const getAllPostsOfUser = async (userId) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT post.post_id, post.title, post.image, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post.author = ?',
+      [userId]
+    );
+    return rows;
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 module.exports = {
-  users,
+  getAllUsers,
   getUser,
+  insertUser,
+  deleteUser,
+  updateUser,
+  getAllPostsOfUser,
 };

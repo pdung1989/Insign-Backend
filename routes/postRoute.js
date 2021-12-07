@@ -1,27 +1,37 @@
 'use strict';
-// postRoute
+/* postRoute */
 const express = require('express');
 
 // multer module to handle multipart/form-data because express does not handle it
 const multer = require('multer');
 // create upload middleware
-const upload = multer({dest: './uploads/'});
+const upload = multer({ dest: './uploads/' });
 
-const { post_list_get, post_get, post_post } = require('../controllers/postController');
+const {
+  post_list_get,
+  post_get,
+  post_post,
+  post_update,
+  post_delete,
+  post_get_comments,
+  post_search,
+  post_random,
+  post_get_likes
+} = require('../controllers/postController');
 const router = express.Router();
 
-router.get('/', post_list_get);
+// Group the routes to avoid duplicate route naming
+router.route('/').get(post_random).post(upload.single('post'), post_post);
 
-router.get('/:postId', post_get);
+router.get('/search', post_search);
 
-router.post('/',  upload.single('post'), post_post);
+router.route('/:postId')
+  .get(post_get)
+  .put(post_update)
+  .delete(post_delete);
 
-router.put('/:postId', (req, res) => {
-  res.send('From this endpoint you can update post.');
-});
+router.get('/:postId/comment', post_get_comments);
 
-router.delete('/', (req, res) => {
-  res.send('From this endpoint you can delete posts.');
-});
+router.get('/:postId/likes', post_get_likes);
 
 module.exports = router;

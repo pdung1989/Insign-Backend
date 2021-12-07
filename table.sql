@@ -23,8 +23,8 @@ CREATE TABLE `post` (
   `category_id` int,
   `style_id` int,
   `location` text,
-  `posted_date` date,
-  `edited_date` date
+  `posted_date` timestamp,
+  `edited_date` timestamp
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `post` (`author`, `title`, `image`, `description`, `category_id`, `style_id`, `location`, `posted_date`, `edited_date`) VALUES 
@@ -32,7 +32,7 @@ INSERT INTO `post` (`author`, `title`, `image`, `description`, `category_id`, `s
 
 CREATE TABLE `likes` (
   `user_id` int NOT NULL,
-  `post_id` int NOT NULL,
+  `post_id` int NOT NULL
   PRIMARY KEY (`user_id`, `post_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -41,8 +41,8 @@ CREATE TABLE `comment` (
   `user_id` int,
   `post_id` int,
   `content` text,
-  `comment_date` date,
-  `edited_date` date
+  `comment_date` timestamp,
+  `edited_date` timestamp
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `add_to_favorite` (
