@@ -1,6 +1,7 @@
 'use strict';
 /* commentRoute */
 const express = require('express');
+const { body } = require('express-validator');
 
 const {
   comment_list_get, comment_post, comment_get, comment_update, comment_delete,
