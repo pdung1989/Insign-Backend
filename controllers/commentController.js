@@ -1,23 +1,27 @@
 'use strict';
-
-const { getAllComments, getComment, insertComment, deleteComment, updateComment } = require("../models/commentModel");
-
 /* commentController*/
+const { getAllComments, getComment, insertComment, deleteComment, updateComment } = require("../models/commentModel");
+const httpError = require('../utils/errors');
 
 // get all comments
-const comment_list_get = async (req, res) => {
-  try {
-    const comments = await getAllComments();
-    console.log('all posts', comments);
-    res.json(comments); //can use: res.send(posts)
-  } catch (error) {
-    console.log(error.message);
-  }
+const comment_list_get = async (req, res, next) => {
+    const comments = await getAllComments(next);
+    if(comments.length > 0) {
+      res.json(comments);
+    } else {
+      const err = httpError('Comments not found', 404);
+      next(err);
+    }
 };
 
 // get comment by Id
-const comment_get = async (req, res) => {
-  const comment = await getComment(req.params.commentId);
+const comment_get = async (req, res, next) => {
+  const comment = await getComment(req.params.commentId, next);
+  if(!comment) {
+    const err = httpError('Comment not found', 404);
+    next(err);
+    return;
+  }
   res.json(comment);
 };
 

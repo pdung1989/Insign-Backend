@@ -5,7 +5,7 @@ const httpError = require('../utils/errors');
 const promisePool = pool.promise();
 
 // use async/await to handle fetching data
-// get all posts
+/* get all posts ---REMOVE? */
 const getAllPosts = async (next) => {
   try {
     const [rows] = await promisePool.execute(

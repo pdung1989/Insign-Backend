@@ -1,5 +1,6 @@
 'use strict';
 /* postController*/
+
 const httpError = require('../utils/errors');
 // object detructuring, import only posts from postModel
 const {
@@ -14,6 +15,7 @@ const {
   getLikesOfPost,
 } = require('../models/postModel');
 
+/* REMOVE ?*/
 const post_list_get = async (req, res, next) => {
   const posts = await getAllPosts(next);
   if(posts.length > 0) {
@@ -24,6 +26,7 @@ const post_list_get = async (req, res, next) => {
   }
 };
 
+// get post by Id
 const post_get = async (req, res, next) => {
   const post = await getPost(req.params.postId, next);
   if(!post) {
