@@ -60,6 +60,7 @@ const post_update = async (req, res) => {
 // get comments by postId
 const post_get_comments = async (req, res, next) => {
   const postComments = await getAllCommentsOfPost(req.params.postId, next);
+  console.log('num of comments', postComments.length);
   if (postComments.length === 0) {
     const err = httpError('Comments not found', 404);
     next(err);
