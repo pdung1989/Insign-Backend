@@ -94,7 +94,7 @@ const updatePost = async (postId, post) => {
 const getAllCommentsOfPost = async (postId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT u.username, u.profile_picture, c.content, c.comment_date, c.edited_date FROM comment as c INNER JOIN insign_user as u ON u.user_id = c.user_id where post_id = ?',
+      'SELECT c.comment_id, u.username, u.profile_picture, c.content, c.comment_date, c.edited_date FROM comment as c INNER JOIN insign_user as u ON u.user_id = c.user_id where post_id = ?',
       [postId]
     );
     return rows;
