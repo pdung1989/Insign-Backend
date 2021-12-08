@@ -61,12 +61,11 @@ const deleteComment = async (commentId, user_id, role_id) => {
 };
 
 // update comment and update also edited_date with current timestamp
-const updateComment = async (commentId, comment) => {
+const updateComment = async (comment) => {
+  let sql = 'UPDATE comment SET content = ?, edited_date = CURRENT_TIMESTAMP WHERE comment_id = ? AND user_id = ?';
+  let params = [comment.content, comment.comment_id, comment.user_id]
   try {
-    const [rows] = await promisePool.execute(
-      'UPDATE comment SET user_id = ?, post_id = ?, content = ?, edited_date = CURRENT_TIMESTAMP WHERE comment_id = ?',
-      [comment.user_id, comment.post_id, comment.content, commentId]
-    );
+    const [rows] = await promisePool.execute(sql, params);
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
