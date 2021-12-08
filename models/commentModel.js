@@ -63,10 +63,8 @@ const deleteComment = async (commentId) => {
 const updateComment = async (commentId, comment) => {
   try {
     const [rows] = await promisePool.execute(
-      'UPDATE comment SET user_id = ?, post_id = ?, content = ?, edited_date = CURRENT_TIMESTAMP WHERE comment_id = ?',
+      'UPDATE comment SET content = ?, edited_date = CURRENT_TIMESTAMP WHERE comment_id = ?',
       [
-        comment.user_id,
-        comment.post_id,
         comment.content,
         commentId,
       ]
