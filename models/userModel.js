@@ -2,20 +2,23 @@
 
 // access database
 const pool = require('../database/db');
+const { httpError } = require('../utils/errors');
 const promisePool = pool.promise();
 
 // get all users
-const getAllUsers = async () => {
+const getAllUsers = async (next) => {
   try {
     const [rows] = await promisePool.execute('SELECT * FROM insign_user');
     return rows;
   } catch (error) {
-    console.log(error.message);
+    console.error('model get all users', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
 // get user by Id
-const getUser = async (userId) => {
+const getUser = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT * FROM insign_user where user_id = ?',
@@ -23,7 +26,9 @@ const getUser = async (userId) => {
     );
     return rows[0];
   } catch (error) {
-    console.log(error.message);
+    console.error('model get user by id', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
@@ -82,7 +87,7 @@ const updateUser = async (userId, user) => {
 };
 
 //get all Posts of a user with number of comments and likes
-const getAllPostsOfUser = async (userId) => {
+const getAllPostsOfUser = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT post.post_id, post.title, post.image, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post.author = ?',
@@ -90,7 +95,8 @@ const getAllPostsOfUser = async (userId) => {
     );
     return rows;
   } catch (error) {
-    console.log(error.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
