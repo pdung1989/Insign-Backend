@@ -75,21 +75,11 @@ const deletePost = async (postId, user_id, role_id) => {
 };
 
 // edit post and get current date time of edited_date
-const updatePost = async (postId, post) => {
+const updatePost = async (post) => {
+  let sql =  'UPDATE post SET title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ? AND author = ?';
+  let params = [post.title, post.image, post.description, post.category_id, post.style_id, post.location, post.post_id, post.author]
   try {
-    const [rows] = await promisePool.execute(
-      'UPDATE post SET author = ?, title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ?',
-      [
-        post.author,
-        post.title,
-        post.image,
-        post.description,
-        post.category_id,
-        post.style_id,
-        post.location,
-        postId,
-      ]
-    );
+    const [rows] = await promisePool.execute(sql, params);
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);

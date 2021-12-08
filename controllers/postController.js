@@ -52,7 +52,9 @@ const post_delete = async (req, res) => {
 
 // update post
 const post_update = async (req, res) => {
-  const updatedPost = await updatePost(req.params.postId, req.body);
+  req.body.post_id = req.params.postId;
+  req.body.author = req.body.author || req.user.user_id;
+  const updatedPost = await updatePost(req.body);
 
   res.json({ message: `post is updated: ${updatedPost}` });
 };
