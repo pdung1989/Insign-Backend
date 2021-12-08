@@ -36,7 +36,6 @@ router.route('/')
   .get(post_random)
   .post(
     upload.single('post'),
-    body('author').notEmpty(),
     body('title').notEmpty(),
     body('category_id').isNumeric(),
     body('style_id').isNumeric(),
@@ -48,7 +47,6 @@ router.route('/:postId')
   .get(post_get)
   .put(
     upload.single('post'),
-    body('author').notEmpty(),
     body('title').notEmpty(),
     body('category_id').isNumeric(),
     body('style_id').isNumeric(),

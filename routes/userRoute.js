@@ -52,4 +52,6 @@ router.route('/:userId')
 
 router.get('/:userId/post', user_get_posts);
 
+router.get('/token', checkToken);
+
 module.exports = router;
