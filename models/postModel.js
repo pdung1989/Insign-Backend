@@ -55,12 +55,18 @@ const insertPost = async (post) => {
   }
 };
 
-const deletePost = async (postId) => {
+// user and admin can delete their posts
+const deletePost = async (postId, user_id, role_id) => {
+  let sql = 'DELETE FROM post WHERE post_id = ? AND author = ?';
+  let params = [postId, user_id];
+
+  // admin can delete post
+  if (role_id === 0) {
+    sql = 'DELETE FROM post WHERE post_id = ?',
+    params = [postId];
+  }
   try {
-    const [rows] = await promisePool.execute(
-      'DELETE FROM post WHERE post_id = ?',
-      [postId]
-    );
+    const [rows] = await promisePool.execute(sql, params);
     console.log('model delete post', rows);
     return rows.affectedRows === 1;
   } catch (e) {

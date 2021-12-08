@@ -45,9 +45,9 @@ const post_post = async (req, res) => {
 
 // delete post
 const post_delete = async (req, res) => {
-  const deletedPost = await deletePost(req.params.postId);
+  const deleted = await deletePost(req.params.postId, req.user.user_id, req.user.role_id);
 
-  res.json({ message: 'post deleted', deletePost });
+  res.json({ message: 'post deleted', deleted});
 };
 
 // update post
