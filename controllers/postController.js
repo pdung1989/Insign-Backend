@@ -38,6 +38,7 @@ const post_get = async (req, res, next) => {
 };
 
 const post_post = async (req, res) => {
+  req.body.author = req.user.user_id;
   const newPost = await insertPost(req.body);
   console.log('add post data', req.body);
   res.json(newPost);

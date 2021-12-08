@@ -62,8 +62,7 @@ const deletePost = async (postId, user_id, role_id) => {
 
   // admin can delete post
   if (role_id === 0) {
-    sql = 'DELETE FROM post WHERE post_id = ?',
-    params = [postId];
+    (sql = 'DELETE FROM post WHERE post_id = ?'), (params = [postId]);
   }
   try {
     const [rows] = await promisePool.execute(sql, params);
@@ -76,8 +75,18 @@ const deletePost = async (postId, user_id, role_id) => {
 
 // edit post and get current date time of edited_date
 const updatePost = async (post) => {
-  let sql =  'UPDATE post SET title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ? AND author = ?';
-  let params = [post.title, post.image, post.description, post.category_id, post.style_id, post.location, post.post_id, post.author]
+  let sql =
+    'UPDATE post SET title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ? AND author = ?';
+  let params = [
+    post.title,
+    post.image,
+    post.description,
+    post.category_id,
+    post.style_id,
+    post.location,
+    post.post_id,
+    post.author,
+  ];
   try {
     const [rows] = await promisePool.execute(sql, params);
     return rows.affectedRows === 1;
