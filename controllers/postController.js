@@ -45,7 +45,6 @@ const post_post = async (req, res, next) => {
     next(err);
     return;
   }
-
   // require types of image file when adding post
   console.log('filename', req.file);
   if (!req.file) {
@@ -53,7 +52,6 @@ const post_post = async (req, res, next) => {
     next(err);
     return;
   }
-
   const post = req.body;
   post.image = req.file.image;
   post.author = req.user.user_id;
@@ -71,6 +69,13 @@ const post_delete = async (req, res) => {
 
 // update post
 const post_update = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('cat_put validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
   req.body.post_id = req.params.postId;
   req.body.author = req.body.author || req.user.user_id;
   const updatedPost = await updatePost(req.body);
