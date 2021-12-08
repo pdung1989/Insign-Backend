@@ -48,9 +48,14 @@ const user_post = async (req, res, next) => {
 };
 
 // delete user
-const user_delete = async (req, res) => {
-  const deletedUser = await deleteUser(req.params.userId);
-  res.json({ message: 'user deleted' });
+const user_delete = async (req, res, next) => {
+  const deletedUser = await deleteUser(req.params.userId, req.user.role_id);
+  if (deletedUser) {
+    res.json({ message: 'user deleted' });
+    return;
+  }
+  const err = httpError('delete user: unauthorized', 404);
+  next(err);
 };
 
 // update user

@@ -62,7 +62,8 @@ const deletePost = async (postId, user_id, role_id) => {
 
   // admin can delete post
   if (role_id === 0) {
-    (sql = 'DELETE FROM post WHERE post_id = ?'), (params = [postId]);
+    sql = 'DELETE FROM post WHERE post_id = ?';
+    params = [postId];
   }
   try {
     const [rows] = await promisePool.execute(sql, params);
