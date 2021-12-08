@@ -23,7 +23,7 @@ app.use('/comment', commentRoute);
 app.use('/category', categoryRoute);
 app.use('/style', styleRoute);
 
-//handling error
+// handling error
 app.use((req, res, next) => {
   const err = httpError('Not found', 404);
   next(err);
