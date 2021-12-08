@@ -34,9 +34,9 @@ const comment_post = async (req, res) => {
 
 // delete comment
 const comment_delete = async (req, res) => {
-  const deletedComment = await deleteComment(req.params.commentId);
+  const deletedComment = await deleteComment(req.params.commentId, req.user.user_id, req.user.role_id);
 
-  res.json({ message: 'comment deleted', deleteComment });
+  res.json({ message: 'comment deleted', deletedComment });
 };
 
 // update comment

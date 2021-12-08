@@ -7,9 +7,7 @@ const promisePool = pool.promise();
 // get all comments
 const getAllComments = async (next) => {
   try {
-    const [rows] = await promisePool.execute(
-      'SELECT * FROM comment'
-    );
+    const [rows] = await promisePool.execute('SELECT * FROM comment');
     return rows;
   } catch (e) {
     console.log('error', e.message);
@@ -46,12 +44,15 @@ const insertComment = async (comment) => {
   }
 };
 
-const deleteComment = async (commentId) => {
+const deleteComment = async (commentId, user_id, role_id) => {
+  let sql = 'DELETE FROM comment WHERE comment_id = ? AND user_id = ?';
+  let params = [commentId, user_id];
+  // admin can delete post
+  if (role_id === 0) {
+    (sql = 'DELETE FROM comment WHERE comment_id = ?'), (params = [commentId]);
+  }
   try {
-    const [rows] = await promisePool.execute(
-      'DELETE FROM comment WHERE comment_id = ?',
-      [commentId]
-    );
+    const [rows] = await promisePool.execute(sql, params);
     console.log('model delete comment', rows);
     return rows.affectedRows === 1;
   } catch (e) {
@@ -64,19 +65,13 @@ const updateComment = async (commentId, comment) => {
   try {
     const [rows] = await promisePool.execute(
       'UPDATE comment SET user_id = ?, post_id = ?, content = ?, edited_date = CURRENT_TIMESTAMP WHERE comment_id = ?',
-      [
-        comment.user_id,
-        comment.post_id,
-        comment.content,
-        commentId,
-      ]
+      [comment.user_id, comment.post_id, comment.content, commentId]
     );
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
   }
 };
-
 
 module.exports = {
   getAllComments,
