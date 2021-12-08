@@ -1,6 +1,7 @@
 /* commentModel TO HANDLE comment DATA */
 'use strict';
 const pool = require('../database/db');
+const httpError = require('../utils/errors');
 const promisePool = pool.promise();
 
 // use async/await to handle fetching data
@@ -32,7 +33,7 @@ const getComment = async (commentId, next) => {
 };
 
 // add comment
-const insertComment = async (comment) => {
+const insertComment = async (comment, next) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO comment(user_id, post_id, content) VALUES (?, ?, ?)',
@@ -41,6 +42,8 @@ const insertComment = async (comment) => {
     return rows;
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 

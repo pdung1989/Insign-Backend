@@ -1,5 +1,6 @@
 'use strict';
 /* commentController*/
+const { validationResult } = require('express-validator');
 const {
   getAllComments,
   getComment,
@@ -32,7 +33,14 @@ const comment_get = async (req, res, next) => {
 };
 
 // add comment
-const comment_post = async (req, res) => {
+const comment_post = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('comment_post validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
   req.body.user_id = req.user.user_id;
   const newComment = await insertComment(req.body);
   console.log('add comment data', req.body);
@@ -51,9 +59,17 @@ const comment_delete = async (req, res) => {
 };
 
 // update comment
-const comment_update = async (req, res) => {
+const comment_update = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('comment_post validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
+
   req.body.comment_id = req.params.commentId;
-  req.body.user_id = req.body.user_id || req.user.user_id
+  req.body.user_id = req.body.user_id || req.user.user_id;
   const updatedComment = await updateComment(req.body);
   res.json({ message: `comment is updated: ${updatedComment}` });
 };

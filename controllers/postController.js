@@ -71,7 +71,7 @@ const post_delete = async (req, res) => {
 const post_update = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.error('cat_put validation', errors.array());
+    console.error('post_put validation', errors.array());
     const err = httpError('data not valid', 400);
     next(err);
     return;
