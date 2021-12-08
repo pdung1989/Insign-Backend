@@ -33,6 +33,7 @@ const comment_get = async (req, res, next) => {
 
 // add comment
 const comment_post = async (req, res) => {
+  req.body.user_id = req.user.user_id;
   const newComment = await insertComment(req.body);
   console.log('add comment data', req.body);
   res.json(newComment);
