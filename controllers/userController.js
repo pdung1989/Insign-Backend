@@ -45,6 +45,15 @@ const user_get_posts = async (req, res) =>  {
   res.json(userPosts);
 }
 
+// check token
+// const checkToken = (req, res, next) => {
+//   if (!req.user) {
+//     next(new Error('token not valid'));
+//   } else {
+//     res.json({ user: req.user });
+//   }
+//  };
+
 module.exports = {
   user_list_get,
   user_get,
