@@ -68,7 +68,7 @@ const deleteUser = async (userId) => {
 };
 
 // update user
-const updateUser = async (userId, user) => {
+const updateUser = async (userId, user, next) => {
   try {
     const [rows] = await promisePool.execute(
       'UPDATE insign_user SET username = ?, email = ?, password = ?, profile_picture = ?, bio= ?, role_id = ? WHERE user_id = ?',
@@ -85,6 +85,8 @@ const updateUser = async (userId, user) => {
     return rows.affectedRows === 1;
   } catch (e) {
     console.error('model update user', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);  
   }
 };
 

@@ -54,10 +54,16 @@ const user_delete = async (req, res) => {
 };
 
 // update user
-const user_update = async (req, res) => {
-  const updatedUser = await updateUser(req.params.userId, req.body);
-
-  res.json({ message: 'user is updated' });
+const user_update = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('user_post validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
+  const updatedUser = await updateUser(req.params.userId, req.body, next);
+  res.json({ message: 'user is updated', updatedUser });
 };
 
 // get posts by userId
