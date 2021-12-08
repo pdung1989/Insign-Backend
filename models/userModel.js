@@ -94,6 +94,19 @@ const getAllPostsOfUser = async (userId) => {
   }
 };
 
+// user log in
+const getUserLogin = async (params) => {
+  try {
+    console.log(params);
+    const [rows] = await promisePool.execute(
+        'SELECT * FROM insign_user WHERE email = ?;',
+        params);
+    return rows;
+  } catch (e) {
+    console.log('error', e.message);
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -101,4 +114,5 @@ module.exports = {
   deleteUser,
   updateUser,
   getAllPostsOfUser,
+  getUserLogin,
 };
