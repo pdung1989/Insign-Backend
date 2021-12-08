@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const httpError = require('./utils/errors');
 const passport = require('./utils/pass');
+const authRoute = require('./routes/authRoute');
 const userRoute = require('./routes/userRoute');
 const postRoute = require('./routes/postRoute');
 const commentRoute = require('./routes/commentRoute');
@@ -22,10 +23,10 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 // for authentication
 app.use(passport.initialize());
 
-
-app.use('/post', postRoute);
-app.use('/user', userRoute);
-app.use('/comment', commentRoute);
+app.use('/auth', authRoute);
+app.use('/post', passport.authenticate('jwt', { session: false }), postRoute);
+app.use('/user', passport.authenticate('jwt', { session: false }), userRoute);
+app.use('/comment', passport.authenticate('jwt', { session: false }),commentRoute);
 app.use('/category', categoryRoute);
 app.use('/style', styleRoute);
 
