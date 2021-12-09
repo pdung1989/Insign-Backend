@@ -50,27 +50,27 @@ const insertUser = async (user, next) => {
   } catch (e) {
     console.error('model insert user', e.message);
     const err = httpError('Sql error', 500);
-    next(err);  
+    next(err);
   }
 };
 
 // delete user
 const deleteUser = async (userId, role_id, next) => {
-  let sql = 'DELETE FROM insign_user WHERE user_id = ? AND role_id = ?'
-  let params = [userId, role_id];
-  // admin can delete user
-  if(role_id === 0) {
-    sql = 'DELETE FROM insign_user WHERE user_id = ?';
-    params = [userId]
+  // only admin can delete user
+  if (role_id === 0) {
+    try {
+      const [rows] = await promisePool.execute(
+        'DELETE FROM insign_user WHERE user_id = ?',
+        [userId]
+      );
+      return rows.affectedRows === 1;
+    } catch (e) {
+      console.error('model delete user', e.message);
+      const err = httpError('Sql error', 500);
+      next(err);
+    }
   }
-  try {
-    const [rows] = await promisePool.execute(sql, params);
-    return rows.affectedRows === 1;
-  } catch (e) {
-    console.error('model delete user', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);  
-  }
+  return false;
 };
 
 // update user
@@ -92,7 +92,7 @@ const updateUser = async (userId, user, next) => {
   } catch (e) {
     console.error('model update user', e.message);
     const err = httpError('Sql error', 500);
-    next(err);  
+    next(err);
   }
 };
 
@@ -115,8 +115,9 @@ const getUserLogin = async (params) => {
   try {
     console.log(params);
     const [rows] = await promisePool.execute(
-        'SELECT * FROM insign_user WHERE email = ?;',
-        params);
+      'SELECT * FROM insign_user WHERE email = ?;',
+      params
+    );
     return rows;
   } catch (e) {
     console.log('error', e.message);
