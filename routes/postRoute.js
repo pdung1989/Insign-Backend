@@ -28,6 +28,7 @@ const {
   post_random,
   post_get_likes,
   like_post,
+  like_delete,
 } = require('../controllers/postController');
 
 const router = express.Router();
@@ -57,9 +58,12 @@ router
   )
   .delete(post_delete);
 
-router.get('/:postId/comment', post_get_comments);
+router.route('/:postId/comment')
+  .get(post_get_comments);
 
-router.get('/:postId/likes', post_get_likes);
-router.post('/:postId/likes', like_post);
+router.route('/:postId/likes')
+  .get(post_get_likes)
+  .post(like_post)
+  .delete(like_delete);
 
 module.exports = router;

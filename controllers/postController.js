@@ -14,6 +14,7 @@ const {
   getRandomPosts,
   getLikesOfPost,
   insertLike,
+  deleteLike,
 } = require('../models/postModel');
 
 /* REMOVE ?*/
@@ -69,7 +70,7 @@ const post_delete = async (req, res, next) => {
     req.user.role_id
   );
   if (deleted) {
-    res.json({ message: 'post deleted', deleted });
+    res.json({ message: 'post deleted' });
     return;
   }
   const err = httpError('delete post: unauthorized', 401);
@@ -94,7 +95,6 @@ const post_update = async (req, res, next) => {
 // get comments by postId
 const post_get_comments = async (req, res, next) => {
   const postComments = await getAllCommentsOfPost(req.params.postId, next);
-  console.log('num of comments', postComments.length);
   if (postComments.length === 0) {
     const err = httpError('Comments not found', 404);
     next(err);
@@ -128,9 +128,25 @@ const post_get_likes = async (req, res) => {
 };
 
 // add new like
-const like_post = async (req, res) => {
+const like_post = async (req, res, next) => {
   const like = await insertLike(req.params.postId, req.user.user_id);
-  res.json({ message: 'like added', like });
+  if (like) {
+    res.json({ message: 'is liked' });
+    return;
+  }
+  const err = httpError('like error', 400);
+  next(err);
+};
+
+// handle unlike
+const like_delete = async (req, res, next) => {
+  const deleted = deleteLike(req.params.postId, req.user.user_id);
+  if (deleted) {
+    res.json({ message: 'unlike' });
+    return;
+  }
+  const err = httpError('unlike: unauthorized', 401);
+  next(err);
 };
 
 module.exports = {
@@ -144,4 +160,5 @@ module.exports = {
   post_random,
   post_get_likes,
   like_post,
+  like_delete,
 };

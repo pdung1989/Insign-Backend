@@ -112,9 +112,9 @@ const getAllCommentsOfPost = async (postId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT c.user_id, c.comment_id, u.username, u.profile_picture, c.content, c.comment_date, c.comment_date, c.edited_date ' +
-      'FROM comment as c ' +
-      'INNER JOIN insign_user as u ON u.user_id = c.user_id ' +
-      'WHERE post_id = ?',
+        'FROM comment as c ' +
+        'INNER JOIN insign_user as u ON u.user_id = c.user_id ' +
+        'WHERE post_id = ?',
       [postId]
     );
     return rows;
@@ -200,15 +200,35 @@ const getLikesOfPost = async (postId) => {
 };
 
 // add like to a post
-const insertLike = async (postId, user_id) => {
+const insertLike = async (postId, userId, next) => {
+  if(!userId) {
+    try {
+      const [rows] = await promisePool.execute(
+        'INSERT INTO likes (user_id, post_id) VALUES (?, ?)',
+        [userId, postId]
+      );
+      return rows;
+    } catch (e) {
+      console.error('model add likes', e.message);
+      const err = httpError('Sql error', 500);
+      next(err);
+    }
+  }
+  return false;
+};
+
+// delete like or unlike
+const deleteLike = async (postId, userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'INSERT INTO likes (user_id, post_id) VALUES (?, ?)',
-      [user_id, postId]
+      'DELETE FROM likes WHERE post_id = ? AND user_id = ?',
+      [postId, userId]
     );
-    return rows;
-  } catch (e) {
-    console.error('model add likes', e.message);
+    return rows.affectedRows === 1;
+  } catch (error) {
+    console.error('model delete like', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
@@ -223,4 +243,5 @@ module.exports = {
   getRandomPosts,
   getLikesOfPost,
   insertLike,
+  deleteLike,
 };
