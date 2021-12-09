@@ -9,6 +9,7 @@ const postRoute = require('./routes/postRoute');
 const commentRoute = require('./routes/commentRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const styleRoute = require('./routes/styleRoute');
+const homeRoute = require('./routes/homeRoute');
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/auth', authRoute);
 app.use('/post', passport.authenticate('jwt', { session: false }), postRoute);
 app.use('/user', passport.authenticate('jwt', { session: false }), userRoute);
 app.use('/comment', passport.authenticate('jwt', { session: false }),commentRoute);
+app.use('/home', homeRoute);
 app.use('/category', categoryRoute);
 app.use('/style', styleRoute);
 
