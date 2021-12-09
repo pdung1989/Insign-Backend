@@ -62,13 +62,18 @@ const post_post = async (req, res, next) => {
 };
 
 // delete post
-const post_delete = async (req, res) => {
+const post_delete = async (req, res, next) => {
   const deleted = await deletePost(
     req.params.postId,
     req.user.user_id,
     req.user.role_id
   );
-  res.json({ message: 'post deleted', deleted });
+  if (deleted) {
+    res.json({ message: 'post deleted', deleted });
+    return;
+  }
+  const err = httpError('delete post: unauthorized', 401);
+  next(err);
 };
 
 // update post

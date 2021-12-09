@@ -54,7 +54,7 @@ const user_delete = async (req, res, next) => {
     res.json({ message: 'user deleted' });
     return;
   }
-  const err = httpError('delete user: unauthorized', 404);
+  const err = httpError('delete user: unauthorized', 401);
   next(err);
 };
 
