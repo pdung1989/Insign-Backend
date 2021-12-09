@@ -179,6 +179,17 @@ const getLikesOfPost = async (postId) => {
   }
 };
 
+// add like to a post
+const insertLike = async (postId, user_id) => {
+  try {
+    const [rows] = await promisePool.execute('INSERT INTO likes (user_id, post_id) VALUES (?, ?)', 
+    [user_id, postId]);
+    return rows;
+  } catch (e) {
+    console.error('model add likes', e.message);
+  }
+}
+
 module.exports = {
   getAllPosts,
   getPost,
@@ -189,4 +200,5 @@ module.exports = {
   searchPosts,
   getRandomPosts,
   getLikesOfPost,
+  insertLike,
 };

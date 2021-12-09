@@ -27,6 +27,7 @@ const {
   post_search,
   post_random,
   post_get_likes,
+  like_post,
 } = require('../controllers/postController');
 
 const router = express.Router();
@@ -59,5 +60,6 @@ router
 router.get('/:postId/comment', post_get_comments);
 
 router.get('/:postId/likes', post_get_likes);
+router.post('/:postId/likes', like_post);
 
 module.exports = router;

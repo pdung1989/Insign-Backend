@@ -13,6 +13,7 @@ const {
   searchPosts,
   getRandomPosts,
   getLikesOfPost,
+  insertLike,
 } = require('../models/postModel');
 
 /* REMOVE ?*/
@@ -116,6 +117,11 @@ const post_get_likes = async (req, res) => {
   res.json(numberOfLikes);
 };
 
+const like_post = async (req, res) => {
+  const like = await insertLike(req.params.postId, req.user.user_id);
+  res.json({message: 'like added', like});
+}
+
 module.exports = {
   post_list_get,
   post_get,
@@ -126,4 +132,5 @@ module.exports = {
   post_search,
   post_random,
   post_get_likes,
+  like_post,
 };
