@@ -127,6 +127,7 @@ const post_get_likes = async (req, res) => {
   res.json(numberOfLikes);
 };
 
+// add new like
 const like_post = async (req, res) => {
   const like = await insertLike(req.params.postId, req.user.user_id);
   res.json({ message: 'like added', like });
