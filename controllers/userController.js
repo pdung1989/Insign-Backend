@@ -8,7 +8,7 @@ const {
   deleteUser,
   getAllPostsOfUser,
 } = require('../models/userModel');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 
 // get all users
 const user_list_get = async (req, res, next) => {

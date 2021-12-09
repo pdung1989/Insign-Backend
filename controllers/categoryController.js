@@ -1,6 +1,6 @@
 'use strict';
 const { getAllCategories } = require('../models/categoryModel');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 
 const category_get = async (req, res, next) => {
   const categories = await getAllCategories(next);

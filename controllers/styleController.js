@@ -1,7 +1,7 @@
 'use strict';
 
 const { getAllStyles } = require('../models/styleModel');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 
 const style_get = async (req, res, next) => {
   const styles = await getAllStyles(next);
@@ -15,8 +15,4 @@ const style_get = async (req, res, next) => {
 
 module.exports = {
   style_get,
-}
-
-
-
-
+};

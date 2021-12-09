@@ -1,7 +1,7 @@
 /* postModel TO HANDLE POST DATA */
 'use strict';
 const pool = require('../database/db');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 const promisePool = pool.promise();
 
 // use async/await to handle fetching data

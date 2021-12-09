@@ -8,7 +8,7 @@ const {
   deleteComment,
   updateComment,
 } = require('../models/commentModel');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 
 // get all comments
 const comment_list_get = async (req, res, next) => {

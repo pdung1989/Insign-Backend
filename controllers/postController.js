@@ -1,7 +1,7 @@
 'use strict';
 /* postController*/
 const { validationResult } = require('express-validator');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 // object detructuring, import only posts from postModel
 const {
   getPost,
