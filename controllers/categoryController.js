@@ -1,5 +1,4 @@
 'use strict';
-
 const { getAllCategories } = require('../models/categoryModel');
 const httpError = require('../utils/errors');
 
