@@ -23,13 +23,13 @@ const post_list_get = async (req, res, next) => {
     const err = httpError('Posts not found', 404);
     next(err);
     return;
-  } 
+  }
   res.json(posts);
 };
 
 // get post by Id
 const post_get = async (req, res, next) => {
-  const post = await getPost(req.params.postId, next);
+  const post = await getPost(req.user.user_id, req.params.postId, next);
   if (!post) {
     const err = httpError('Post not found', 404);
     next(err);
@@ -63,8 +63,12 @@ const post_post = async (req, res, next) => {
 
 // delete post
 const post_delete = async (req, res) => {
-  const deleted = await deletePost(req.params.postId, req.user.user_id, req.user.role_id);
-  res.json({ message: 'post deleted', deleted});
+  const deleted = await deletePost(
+    req.params.postId,
+    req.user.user_id,
+    req.user.role_id
+  );
+  res.json({ message: 'post deleted', deleted });
 };
 
 // update post
@@ -90,7 +94,7 @@ const post_get_comments = async (req, res, next) => {
     const err = httpError('Comments not found', 404);
     next(err);
     return;
-  } 
+  }
   res.json(postComments);
 };
 
@@ -108,7 +112,8 @@ const post_random = async (req, res, next) => {
     const err = httpError('Posts not found', 404);
     next(err);
     return;
-  } res.json(posts);
+  }
+  res.json(posts);
 };
 
 // get number of likes of a post
@@ -119,8 +124,8 @@ const post_get_likes = async (req, res) => {
 
 const like_post = async (req, res) => {
   const like = await insertLike(req.params.postId, req.user.user_id);
-  res.json({message: 'like added', like});
-}
+  res.json({ message: 'like added', like });
+};
 
 module.exports = {
   post_list_get,

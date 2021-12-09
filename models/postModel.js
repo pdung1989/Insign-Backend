@@ -20,11 +20,16 @@ const getAllPosts = async (next) => {
 };
 
 // get post by Id, a post has author's name, numbers of likes and numbers of comments
-const getPost = async (postId, next) => {
+// if self_like = 1 means user liked the post, self_like = 2, user has not like 
+const getPost = async (userId, postId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post_id, author, title, image, description, location, posted_date, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post_id = ?',
-      [postId]
+      'SELECT post_id, author, title, image, description, location, posted_date, ' +
+        '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
+        '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
+        '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = ?) as self_like ' +
+        'FROM post WHERE post_id = ?',
+      [userId, postId]
     );
     return rows[0];
   } catch (e) {
@@ -182,13 +187,15 @@ const getLikesOfPost = async (postId) => {
 // add like to a post
 const insertLike = async (postId, user_id) => {
   try {
-    const [rows] = await promisePool.execute('INSERT INTO likes (user_id, post_id) VALUES (?, ?)', 
-    [user_id, postId]);
+    const [rows] = await promisePool.execute(
+      'INSERT INTO likes (user_id, post_id) VALUES (?, ?)',
+      [user_id, postId]
+    );
     return rows;
   } catch (e) {
     console.error('model add likes', e.message);
   }
-}
+};
 
 module.exports = {
   getAllPosts,
