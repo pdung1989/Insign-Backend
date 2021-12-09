@@ -47,19 +47,22 @@ const insertComment = async (comment, next) => {
   }
 };
 
-const deleteComment = async (commentId, user_id, role_id) => {
+// only admin and comment's owner can delete comment
+const deleteComment = async (commentId, user_id, role_id, next) => {
   let sql = 'DELETE FROM comment WHERE comment_id = ? AND user_id = ?';
   let params = [commentId, user_id];
   // admin can delete post
   if (role_id === 0) {
-    (sql = 'DELETE FROM comment WHERE comment_id = ?'), (params = [commentId]);
+    sql = 'DELETE FROM comment WHERE comment_id = ?', 
+    params = [commentId];
   }
   try {
     const [rows] = await promisePool.execute(sql, params);
-    console.log('model delete comment', rows);
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 

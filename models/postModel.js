@@ -65,7 +65,7 @@ const insertPost = async (post) => {
   }
 };
 
-// user and admin can delete their posts
+// post's author and admin can delete their posts
 const deletePost = async (postId, user_id, role_id, next) => {
   let sql = 'DELETE FROM post WHERE post_id = ? AND author = ?';
   let params = [postId, user_id];

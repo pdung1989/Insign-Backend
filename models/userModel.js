@@ -100,7 +100,11 @@ const updateUser = async (userId, user, next) => {
 const getAllPostsOfUser = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post.post_id, post.title, post.image, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post.author = ?',
+      'SELECT post.post_id, post.title, post.image, ' +
+      '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
+      '(SELECT count(*) from comment ' +
+      'WHERE comment.post_id = post.post_id) as num_comments ' +
+      'FROM post WHERE post.author = ?',
       [userId]
     );
     return rows;

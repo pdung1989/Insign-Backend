@@ -48,13 +48,18 @@ const comment_post = async (req, res, next) => {
 };
 
 // delete comment
-const comment_delete = async (req, res) => {
+const comment_delete = async (req, res, next) => {
   const deletedComment = await deleteComment(
     req.params.commentId,
     req.user.user_id,
     req.user.role_id
   );
-  res.json({ message: 'comment deleted', deletedComment });
+  if(deletedComment) {
+    res.json({ message: 'comment deleted', deletedComment });
+    return;
+  }
+  const err = httpError('delete comment: unauthorized', 401);
+  next(err);
 };
 
 // update comment
