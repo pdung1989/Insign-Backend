@@ -52,10 +52,11 @@ const post_post = async (req, res, next) => {
     next(err);
     return;
   }
-  req.body.image = req.file.image;
-  req.body.author = req.user.user_id;
-  const newPost = await insertPost(req.body);
-  console.log('add post data', req.body);
+  const post = req.body;
+  post.image = req.file.filename;
+  post.author = req.user.user_id;
+  const newPost = await insertPost(post);
+  console.log('add post data', post);
   res.json(newPost);
 };
 

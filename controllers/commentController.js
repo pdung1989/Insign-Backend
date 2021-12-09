@@ -54,7 +54,6 @@ const comment_delete = async (req, res) => {
     req.user.user_id,
     req.user.role_id
   );
-
   res.json({ message: 'comment deleted', deletedComment });
 };
 

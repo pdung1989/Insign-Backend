@@ -13,9 +13,9 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb(null, false);
   }
-}
+};
 // create upload middleware
-const upload = multer({ dest: './uploads/', fileFilter});
+const upload = multer({ dest: './uploads/', fileFilter });
 
 const {
   post_list_get,
@@ -26,30 +26,34 @@ const {
   post_get_comments,
   post_search,
   post_random,
-  post_get_likes
+  post_get_likes,
 } = require('../controllers/postController');
 
 const router = express.Router();
 
 // Group the routes to avoid duplicate route naming
-router.route('/')
+router
+  .route('/')
   .get(post_random)
   .post(
-    upload.single('post'),
+    upload.single('image'),
     body('title').notEmpty(),
     body('category_id').isNumeric(),
     body('style_id').isNumeric(),
-    post_post);
+    post_post
+  );
 
 router.get('/search', post_search);
 
-router.route('/:postId')
+router
+  .route('/:postId')
   .get(post_get)
   .put(
     body('title').notEmpty(),
     body('category_id').isNumeric(),
     body('style_id').isNumeric(),
-    post_update)
+    post_update
+  )
   .delete(post_delete);
 
 router.get('/:postId/comment', post_get_comments);
