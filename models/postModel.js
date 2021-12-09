@@ -77,10 +77,9 @@ const deletePost = async (postId, user_id, role_id) => {
 // edit post and get current date time of edited_date
 const updatePost = async (post) => {
   let sql =
-    'UPDATE post SET title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ? AND author = ?';
+    'UPDATE post SET title = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ? AND author = ?';
   let params = [
     post.title,
-    post.image,
     post.description,
     post.category_id,
     post.style_id,

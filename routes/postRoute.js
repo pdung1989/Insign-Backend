@@ -46,7 +46,6 @@ router.get('/search', post_search);
 router.route('/:postId')
   .get(post_get)
   .put(
-    upload.single('post'),
     body('title').notEmpty(),
     body('category_id').isNumeric(),
     body('style_id').isNumeric(),

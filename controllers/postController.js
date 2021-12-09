@@ -52,9 +52,8 @@ const post_post = async (req, res, next) => {
     next(err);
     return;
   }
-  const post = req.body;
-  post.image = req.file.image;
-  post.author = req.user.user_id;
+  req.body.image = req.file.image;
+  req.body.author = req.user.user_id;
   const newPost = await insertPost(req.body);
   console.log('add post data', req.body);
   res.json(newPost);
@@ -63,12 +62,11 @@ const post_post = async (req, res, next) => {
 // delete post
 const post_delete = async (req, res) => {
   const deleted = await deletePost(req.params.postId, req.user.user_id, req.user.role_id);
-
   res.json({ message: 'post deleted', deleted});
 };
 
 // update post
-const post_update = async (req, res) => {
+const post_update = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.error('post_put validation', errors.array());
@@ -79,7 +77,6 @@ const post_update = async (req, res) => {
   req.body.post_id = req.params.postId;
   req.body.author = req.body.author || req.user.user_id;
   const updatedPost = await updatePost(req.body);
-
   res.json({ message: `post is updated: ${updatedPost}` });
 };
 
