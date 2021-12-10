@@ -7,6 +7,7 @@ const {
   updateUser,
   deleteUser,
   getAllPostsOfUser,
+  getFavoritePosts,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 
@@ -82,6 +83,12 @@ const user_get_posts = async (req, res, next) => {
   res.json(userPosts);
 };
 
+// get favorite posts
+const user_get_favorites = async (req, res) => {
+  const favoritePosts = await getFavoritePosts(req.user.user_id);
+  res.json(favoritePosts);
+}
+
 // check token
 const checkToken = (req, res, next) => {
   if (!req.user) {
@@ -98,5 +105,6 @@ module.exports = {
   user_delete,
   user_update,
   user_get_posts,
+  user_get_favorites,
   checkToken,
 };
