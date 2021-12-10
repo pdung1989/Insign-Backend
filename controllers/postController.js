@@ -130,12 +130,12 @@ const post_get_likes = async (req, res) => {
 // add new like
 const like_post = async (req, res, next) => {
   const like = await insertLike(req.params.postId, req.user.user_id);
-  if (like) {
-    res.json({ message: 'is liked' });
+  if (!like) {
+    const err = httpError('like error', 400);
+    next(err);
     return;
   }
-  const err = httpError('like error', 400);
-  next(err);
+  res.json({ message: 'is liked' });
 };
 
 // handle unlike

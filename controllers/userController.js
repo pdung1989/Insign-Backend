@@ -74,7 +74,7 @@ const user_update = async (req, res, next) => {
 // get posts by userId
 const user_get_posts = async (req, res, next) => {
   const userPosts = await getAllPostsOfUser(req.params.userId, next);
-  if (userPosts.length === 0) {
+  if (userPosts.length < 1) {
     const err = httpError('Posts of a user not found', 404);
     next(err);
     return;
