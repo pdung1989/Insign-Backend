@@ -201,17 +201,17 @@ const getLikesOfPost = async (postId) => {
 
 // add like to a post
 const insertLike = async (postId, userId, next) => {
-    try {
-      const [rows] = await promisePool.execute(
-        'INSERT INTO likes (user_id, post_id) VALUES (?, ?)',
-        [userId, postId]
-      );
-      return rows;
-    } catch (e) {
-      console.error('model add likes', e.message);
-      const err = httpError('Sql error', 500);
-      next(err);
-    }
+  try {
+    const [rows] = await promisePool.execute(
+      'INSERT INTO likes (user_id, post_id) VALUES (?, ?)',
+      [userId, postId]
+    );
+    return rows;
+  } catch (e) {
+    console.error('model add likes', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
 };
 
 // delete like or unlike
