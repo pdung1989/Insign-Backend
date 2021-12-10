@@ -45,7 +45,7 @@ const getPost = async (userId, postId, next) => {
 };
 
 // add post
-const insertPost = async (post) => {
+const insertPost = async (post, next) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO post(author, title, image, description, category_id, style_id, location) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -62,6 +62,8 @@ const insertPost = async (post) => {
     return rows;
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
