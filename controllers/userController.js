@@ -84,10 +84,15 @@ const user_get_posts = async (req, res, next) => {
 };
 
 // get favorite posts
-const user_get_favorites = async (req, res) => {
-  const favoritePosts = await getFavoritePosts(req.user.user_id);
+const user_get_favorites = async (req, res, next) => {
+  const favoritePosts = await getFavoritePosts(req.user.user_id, next);
+  if (favoritePosts.length < 1) {
+    const err = httpError('Favorite Posts not found', 404);
+    next(err);
+    return;
+  }
   res.json(favoritePosts);
-}
+};
 
 // check token
 const checkToken = (req, res, next) => {

@@ -117,7 +117,7 @@ const getAllPostsOfUser = async (userId, next) => {
 };
 
 // get all favotite posts
-const getFavoritePosts = async (userId) => {
+const getFavoritePosts = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'SELECT post.post_id, post.title, post.image, ' +
@@ -130,7 +130,9 @@ const getFavoritePosts = async (userId) => {
     );
     return rows;
   } catch (e) {
-    console.error('model get favorite posts', e.message )
+    console.error('model get favorite posts', e.message );
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 }
 
