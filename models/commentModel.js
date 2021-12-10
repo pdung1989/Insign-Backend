@@ -69,6 +69,7 @@ const updateComment = async (comment) => {
   let params = [comment.content, comment.comment_id, comment.user_id]
   try {
     const [rows] = await promisePool.execute(sql, params);
+
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
