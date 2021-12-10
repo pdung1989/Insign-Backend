@@ -126,15 +126,15 @@ const getFavoritePosts = async (userId, next) => {
         '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = post.author) as self_like, ' +
         '(SELECT count(*) from add_to_favorite where add_to_favorite.post_id = post.post_id and add_to_favorite.user_id = post.author) as self_favorite ' +
         'FROM post INNER JOIN add_to_favorite as f ON f.post_id = post.post_id WHERE f.user_id = ? ORDER BY posted_date DESC',
-        [userId]
+      [userId]
     );
     return rows;
   } catch (e) {
-    console.error('model get favorite posts', e.message );
+    console.error('model get favorite posts', e.message);
     const err = httpError('Sql error', 500);
     next(err);
   }
-}
+};
 
 // user log in
 const getUserLogin = async (params) => {

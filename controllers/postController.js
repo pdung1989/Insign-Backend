@@ -15,6 +15,7 @@ const {
   getLikesOfPost,
   insertLike,
   deleteLike,
+  addToFavorite,
 } = require('../models/postModel');
 
 /* REMOVE ?*/
@@ -130,7 +131,6 @@ const post_get_likes = async (req, res) => {
 // add new like
 const like_post = async (req, res, next) => {
   const like = await insertLike(req.params.postId, req.user.user_id, next);
-  console.log(like);
   if (like) {
     res.json({ message: 'is liked' });
     return;
@@ -141,6 +141,28 @@ const like_post = async (req, res, next) => {
 
 // handle unlike
 const like_delete = async (req, res, next) => {
+  const deleted = deleteLike(req.params.postId, req.user.user_id, next);
+  if (deleted) {
+    res.json({ message: 'unlike' });
+    return;
+  }
+  const err = httpError('unlike: unauthorized', 401);
+  next(err);
+};
+
+// add post to favorites
+const favorite_add = async (req, res, next) => {
+  const favoritePost = await addToFavorite(req.user.user_id, req.params.postId, next);
+  if (favoritePost) {
+    res.json({ message: 'post is added to favorite' });
+    return;
+  }
+  const err = httpError('add to favorite: error', 400);
+  next(err);
+}
+
+// handle remove post from favorites
+const favorite_delete = async (req, res, next) => {
   const deleted = deleteLike(req.params.postId, req.user.user_id, next);
   if (deleted) {
     res.json({ message: 'unlike' });
@@ -162,4 +184,5 @@ module.exports = {
   post_get_likes,
   like_post,
   like_delete,
+  favorite_add,
 };

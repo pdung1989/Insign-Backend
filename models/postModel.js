@@ -222,8 +222,38 @@ const deleteLike = async (postId, userId, next) => {
       [postId, userId]
     );
     return rows.affectedRows === 1;
-  } catch (error) {
+  } catch (e) {
     console.error('model delete like', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// add to favorites
+const addToFavorite = async (userId, postId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'INSERT INTO add_to_favorite(user_id, post_id) VALUES(?, ?)',
+      [userId, postId]
+    );
+    return rows;
+  } catch (e) {
+    console.error('model add to favorite', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+}
+
+// delete post from favorites
+const deleteFromFavorite =  async (postId, userId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'DELETE FROM add_to_favorite WHERE post_id = ? AND user_id = ?',
+      [postId, userId]
+    );
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.error('model remove post from favorites', e.message);
     const err = httpError('Sql error', 500);
     next(err);
   }
@@ -241,4 +271,6 @@ module.exports = {
   getLikesOfPost,
   insertLike,
   deleteLike,
+  addToFavorite,
+  deleteFromFavorite,
 };
