@@ -30,6 +30,7 @@ const {
   like_post,
   like_delete,
   favorite_add,
+  favorite_delete,
 } = require('../controllers/postController');
 
 const router = express.Router();
@@ -68,6 +69,7 @@ router.route('/:postId/likes')
   .delete(like_delete);
 
   router.route('/:postId/favorite')
-  .post(favorite_add);
+  .post(favorite_add)
+  .delete(favorite_delete);
 
 module.exports = router;

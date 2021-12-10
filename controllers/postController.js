@@ -16,6 +16,7 @@ const {
   insertLike,
   deleteLike,
   addToFavorite,
+  deleteFromFavorite,
 } = require('../models/postModel');
 
 /* REMOVE ?*/
@@ -163,12 +164,12 @@ const favorite_add = async (req, res, next) => {
 
 // handle remove post from favorites
 const favorite_delete = async (req, res, next) => {
-  const deleted = deleteLike(req.params.postId, req.user.user_id, next);
+  const deleted = deleteFromFavorite(req.params.postId, req.user.user_id, next);
   if (deleted) {
-    res.json({ message: 'unlike' });
+    res.json({ message: 'unfavorite' });
     return;
   }
-  const err = httpError('unlike: unauthorized', 401);
+  const err = httpError('unfavorite: unauthorized', 401);
   next(err);
 };
 
@@ -185,4 +186,5 @@ module.exports = {
   like_post,
   like_delete,
   favorite_add,
+  favorite_delete
 };
