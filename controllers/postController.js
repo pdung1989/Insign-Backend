@@ -141,7 +141,7 @@ const like_post = async (req, res, next) => {
 
 // handle unlike
 const like_delete = async (req, res, next) => {
-  const deleted = deleteLike(req.params.postId, req.user.user_id);
+  const deleted = deleteLike(req.params.postId, req.user.user_id, next);
   if (deleted) {
     res.json({ message: 'unlike' });
     return;
