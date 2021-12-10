@@ -33,7 +33,7 @@ const router = express.Router();
 router.route('/')
   .get(user_list_get)
   .post(
-    upload.single('user'),
+    upload.single('profile_picture'),
     body('username').isLength({ min: 3 }),
     body('email').isEmail(),
     body('password').matches('(?=.*[A-Z]).{8,}'),
@@ -44,7 +44,7 @@ router.route('/:userId')
   .get(user_get)
   .delete(user_delete)
   .put(
-    upload.single('user'),
+    upload.single('profile_picture'),
     body('username').isLength({ min: 3 }),
     body('email').isEmail(),
     body('password').matches('(?=.*[A-Z]).{8,}'),
