@@ -25,6 +25,7 @@ const {
   post_delete,
   post_get_comments,
   post_search,
+  professtional_list_get,
   post_random,
   post_get_likes,
   like_post,
@@ -48,6 +49,7 @@ router
   );
 
 router.get('/search', post_search);
+router.get('/professional', professtional_list_get);
 
 router
   .route('/:postId')

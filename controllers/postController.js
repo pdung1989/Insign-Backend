@@ -17,6 +17,7 @@ const {
   deleteLike,
   addToFavorite,
   deleteFromFavorite,
+  getProfessionalPosts,
 } = require('../models/postModel');
 
 /* REMOVE ?*/
@@ -153,14 +154,18 @@ const like_delete = async (req, res, next) => {
 
 // add post to favorites
 const favorite_add = async (req, res, next) => {
-  const favoritePost = await addToFavorite(req.user.user_id, req.params.postId, next);
+  const favoritePost = await addToFavorite(
+    req.user.user_id,
+    req.params.postId,
+    next
+  );
   if (favoritePost) {
     res.json({ message: 'post is added to favorite' });
     return;
   }
   const err = httpError('add to favorite: error', 400);
   next(err);
-}
+};
 
 // handle remove post from favorites
 const favorite_delete = async (req, res, next) => {
@@ -171,6 +176,17 @@ const favorite_delete = async (req, res, next) => {
   }
   const err = httpError('unfavorite: unauthorized', 401);
   next(err);
+};
+
+// get professional posts
+const professtional_list_get = async (req, res, next) => {
+  const professionalPosts = await getProfessionalPosts(next);
+  if (professionalPosts.length < 1) {
+    const err = httpError(' Professional posts not found', 404);
+    next(err);
+    return;
+  }
+  res.json(professionalPosts);
 };
 
 module.exports = {
@@ -186,5 +202,6 @@ module.exports = {
   like_post,
   like_delete,
   favorite_add,
-  favorite_delete
+  favorite_delete,
+  professtional_list_get,
 };

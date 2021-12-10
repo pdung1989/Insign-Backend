@@ -242,10 +242,10 @@ const addToFavorite = async (userId, postId, next) => {
     const err = httpError('Sql error', 500);
     next(err);
   }
-}
+};
 
 // delete post from favorites
-const deleteFromFavorite =  async (postId, userId, next) => {
+const deleteFromFavorite = async (postId, userId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'DELETE FROM add_to_favorite WHERE post_id = ? AND user_id = ?',
@@ -254,6 +254,26 @@ const deleteFromFavorite =  async (postId, userId, next) => {
     return rows.affectedRows === 1;
   } catch (e) {
     console.error('model remove post from favorites', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// get all posts from professional/designer (role_id=2)
+const getProfessionalPosts = async (next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location ' +
+        'FROM post ' +
+        'INNER JOIN insign_user as u ON u.user_id = post.author ' +
+        'INNER JOIN category as c ON c.category_id = post.category_id ' +
+        'INNER JOIN style as s ON s.style_id = post.style_id ' +
+        'WHERE u.role_id = 2 ' +
+        'ORDER BY RAND () LIMIT 2'
+    );
+    return rows;
+  } catch (e) {
+    console.error('model get professional posts', e.message);
     const err = httpError('Sql error', 500);
     next(err);
   }
@@ -273,4 +293,5 @@ module.exports = {
   deleteLike,
   addToFavorite,
   deleteFromFavorite,
+  getProfessionalPosts,
 };
