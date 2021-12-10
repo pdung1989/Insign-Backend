@@ -68,7 +68,7 @@ router.route('/:postId/likes')
   .post(like_post)
   .delete(like_delete);
 
-  router.route('/:postId/favorite')
+  router.route('/:postId/favorites')
   .post(favorite_add)
   .delete(favorite_delete);
 
