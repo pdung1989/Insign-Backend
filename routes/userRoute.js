@@ -25,8 +25,6 @@ const {
   user_update,
   user_get_posts,
   user_get_favorites,
-  user_add_favorite,
-  // user_delete_favorites,
   checkToken,
 } = require('../controllers/userController');
 
