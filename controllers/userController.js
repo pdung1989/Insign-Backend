@@ -8,9 +8,7 @@ const {
   deleteUser,
   getAllPostsOfUser,
   getFavoritePosts,
-  insertFavoritePost,
 } = require('../models/userModel');
-const { post } = require('../routes/authRoute');
 const { httpError } = require('../utils/errors');
 
 // get all users
