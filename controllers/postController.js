@@ -1,6 +1,6 @@
 'use strict';
 /* postController*/
-
+const { validationResult } = require('express-validator');
 const httpError = require('../utils/errors');
 // object detructuring, import only posts from postModel
 const {
@@ -37,23 +37,47 @@ const post_get = async (req, res, next) => {
   res.json(post);
 };
 
-const post_post = async (req, res) => {
-  const newPost = await insertPost(req.body);
-  console.log('add post data', req.body);
+const post_post = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('post_post validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
+  // require types of image file when adding post
+  console.log('filename', req.file);
+  if (!req.file) {
+    const err = httpError('Invalid file', 400);
+    next(err);
+    return;
+  }
+  const post = req.body;
+  post.image = req.file.filename;
+  post.author = req.user.user_id;
+  const newPost = await insertPost(post);
+  console.log('add post data', post);
   res.json(newPost);
 };
 
 // delete post
 const post_delete = async (req, res) => {
-  const deletedPost = await deletePost(req.params.postId);
-
-  res.json({ message: 'post deleted', deletePost });
+  const deleted = await deletePost(req.params.postId, req.user.user_id, req.user.role_id);
+  res.json({ message: 'post deleted', deleted});
 };
 
 // update post
-const post_update = async (req, res) => {
-  const updatedPost = await updatePost(req.params.postId, req.body);
-
+const post_update = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('post_put validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
+  req.body.post_id = req.params.postId;
+  req.body.author = req.body.author || req.user.user_id;
+  const updatedPost = await updatePost(req.body);
   res.json({ message: `post is updated: ${updatedPost}` });
 };
 

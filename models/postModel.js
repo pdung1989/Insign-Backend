@@ -55,12 +55,18 @@ const insertPost = async (post) => {
   }
 };
 
-const deletePost = async (postId) => {
+// user and admin can delete their posts
+const deletePost = async (postId, user_id, role_id) => {
+  let sql = 'DELETE FROM post WHERE post_id = ? AND author = ?';
+  let params = [postId, user_id];
+
+  // admin can delete post
+  if (role_id === 0) {
+    sql = 'DELETE FROM post WHERE post_id = ?';
+    params = [postId];
+  }
   try {
-    const [rows] = await promisePool.execute(
-      'DELETE FROM post WHERE post_id = ?',
-      [postId]
-    );
+    const [rows] = await promisePool.execute(sql, params);
     console.log('model delete post', rows);
     return rows.affectedRows === 1;
   } catch (e) {
@@ -69,21 +75,20 @@ const deletePost = async (postId) => {
 };
 
 // edit post and get current date time of edited_date
-const updatePost = async (postId, post) => {
+const updatePost = async (post) => {
+  let sql =
+    'UPDATE post SET title = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ? AND author = ?';
+  let params = [
+    post.title,
+    post.description,
+    post.category_id,
+    post.style_id,
+    post.location,
+    post.post_id,
+    post.author,
+  ];
   try {
-    const [rows] = await promisePool.execute(
-      'UPDATE post SET author = ?, title = ?, image = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP WHERE post_id = ?',
-      [
-        post.author,
-        post.title,
-        post.image,
-        post.description,
-        post.category_id,
-        post.style_id,
-        post.location,
-        postId,
-      ]
-    );
+    const [rows] = await promisePool.execute(sql, params);
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
@@ -94,7 +99,7 @@ const updatePost = async (postId, post) => {
 const getAllCommentsOfPost = async (postId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT c.comment_id, u.username, u.profile_picture, c.content, c.comment_date, c.edited_date FROM comment as c INNER JOIN insign_user as u ON u.user_id = c.user_id where post_id = ?',
+      'SELECT c.user_id, c.comment_id, u.username, u.profile_picture, c.content, c.comment_date, c.comment_date, c.edited_date FROM comment as c INNER JOIN insign_user as u ON u.user_id = c.user_id where post_id = ?',
       [postId]
     );
     return rows;

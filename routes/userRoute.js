@@ -25,7 +25,7 @@ const {
   user_delete,
   user_update,
   user_get_posts,
-
+  checkToken,
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -51,5 +51,7 @@ router.route('/:userId')
     user_update);
 
 router.get('/:userId/post', user_get_posts);
+
+router.get('/token', checkToken);
 
 module.exports = router;
