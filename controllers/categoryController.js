@@ -4,7 +4,7 @@ const { httpError } = require('../utils/errors');
 
 const category_get = async (req, res, next) => {
   const categories = await getAllCategories(next);
-  if (categories.length === 0) {
+  if (categories.length < 1) {
     const err = httpError('Categories not found', 404);
     next(err);
     return;

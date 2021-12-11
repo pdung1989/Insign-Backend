@@ -10,7 +10,7 @@ const getAllUsers = async (next) => {
   try {
     const [rows] = await promisePool.execute('SELECT * FROM insign_user');
     return rows;
-  } catch (error) {
+  } catch (e) {
     console.error('model get all users', e.message);
     const err = httpError('Sql error', 500);
     next(err);
@@ -25,7 +25,7 @@ const getUser = async (userId, next) => {
       [userId]
     );
     return rows[0];
-  } catch (error) {
+  } catch (e) {
     console.error('model get user by id', e.message);
     const err = httpError('Sql error', 500);
     next(err);
