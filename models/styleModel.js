@@ -5,7 +5,7 @@ const promisePool = pool.promise();
 
 const getAllStyles = async (next) => {
   try {
-    const [rows] = await promisePool.execute('SELECT * FROM style');
+    const [rows] = await promisePool.execute('SELECT * FROM style ORDER BY style_id DESC');
     return rows;
   } catch (e) {
     console.log('error', e.message);
