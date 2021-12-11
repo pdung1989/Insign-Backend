@@ -23,7 +23,7 @@ const {
 /* REMOVE ?*/
 const post_list_get = async (req, res, next) => {
   const posts = await getAllPosts(next);
-  if (posts.length === 0) {
+  if (!posts) {
     const err = httpError('Posts not found', 404);
     next(err);
     return;
@@ -98,7 +98,7 @@ const post_update = async (req, res, next) => {
 // get comments by postId
 const post_get_comments = async (req, res, next) => {
   const postComments = await getAllCommentsOfPost(req.params.postId, next);
-  if (postComments.length === 0) {
+  if (!postComments) {
     const err = httpError('Comments not found', 404);
     next(err);
     return;
@@ -116,7 +116,7 @@ const post_search = async (req, res) => {
 // get random posts and limit with query params
 const post_random = async (req, res, next) => {
   const posts = await getRandomPosts(req, next);
-  if (posts.length === 0) {
+  if (!posts) {
     const err = httpError('Posts not found', 404);
     next(err);
     return;
@@ -181,7 +181,7 @@ const favorite_delete = async (req, res, next) => {
 // get professional posts
 const professtional_list_get = async (req, res, next) => {
   const professionalPosts = await getProfessionalPosts(next);
-  if (professionalPosts.length < 1) {
+  if (!professionalPosts) {
     const err = httpError(' Professional posts not found', 404);
     next(err);
     return;
