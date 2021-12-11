@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 // for authentication
 app.use(passport.initialize());
 
+app.use(express.static('uploads'));
 app.use('/auth', authRoute);
 app.use('/post', passport.authenticate('jwt', { session: false }), postRoute);
 app.use('/user', passport.authenticate('jwt', { session: false }), userRoute);

@@ -142,17 +142,17 @@ const searchPosts = async (req) => {
 };
 
 const buildSearchPostQuery = (req, sqlQuery) => {
-  if (req.query.userId) {
-    sqlQuery += ' AND author = ' + req.query.userId;
-  }
+  // if (req.query.userId) {
+  //   sqlQuery += ' AND author = ' + req.query.userId;
+  // }
 
-  if (req.query.styleId) {
-    sqlQuery += ' AND style_id = ' + req.query.styleId;
-  }
+  // if (req.query.styleId) {
+  //   sqlQuery += ' AND style_id = ' + req.query.styleId;
+  // }
 
-  if (req.query.categoryId) {
-    sqlQuery += ' AND category_id = ' + req.query.categoryId;
-  }
+  // if (req.query.categoryId) {
+  //   sqlQuery += ' AND category_id = ' + req.query.categoryId;
+  // }
 
   if (req.query.title) {
     sqlQuery += " AND title like '%" + req.query.title + "%'";

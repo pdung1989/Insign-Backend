@@ -105,11 +105,11 @@ const getAllPostsOfUser = async (userId, next) => {
         '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
         '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = post.author) as self_like, ' +
         '(SELECT count(*) from add_to_favorite where add_to_favorite.post_id = post.post_id and add_to_favorite.user_id = post.author) as self_favorite ' +
-        'FROM post WHERE post.author = ? ORDER BY posted_date DESC',
+        'FROM post WHERE post.author = ? ORDER BY post_id DESC',
       [userId]
     );
     return rows;
-  } catch (error) {
+  } catch (e) {
     console.error('model get posts of a user', e.message);
     const err = httpError('Sql error', 500);
     next(err);
