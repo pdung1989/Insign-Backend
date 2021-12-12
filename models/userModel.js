@@ -17,12 +17,14 @@ const getAllUsers = async (next) => {
   }
 };
 
-// get user by Id
-const getUser = async (userId, next) => {
+// get user by Id, is_followed = 1 means the user is followed by the logged in user
+// is_followed = 0 means the user is not followed by the logged in user
+const getUser = async (loginUserId, followingId,  userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT * FROM insign_user where user_id = ?',
-      [userId]
+      'SELECT *, (SELECT count(following_id) from following WHERE following.user_id = ? and following_id = ?) as is_followed ' +
+      'FROM insign_user where user_id = ?',
+      [loginUserId, followingId,  userId]
     );
     return rows[0];
   } catch (e) {

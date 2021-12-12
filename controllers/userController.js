@@ -30,7 +30,7 @@ const user_list_get = async (req, res, next) => {
 
 // get user by userId
 const user_get = async (req, res, next) => {
-  const user = await getUser(req.params.userId, next);
+  const user = await getUser(req.user.user_id, req.params.userId, req.params.userId, next);
   if (user) {
     delete user.password;
     res.json(user);
