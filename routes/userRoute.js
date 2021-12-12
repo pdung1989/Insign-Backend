@@ -28,8 +28,9 @@ const {
   user_get_list_following,
   user_get_list_follower,
   user_add_following,
-  checkToken,
   user_delete_following,
+  user_get_follow_info,
+  checkToken,
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -66,6 +67,7 @@ router.route('/:userId')
 
 router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);
+router.get('/:userId/follow', user_get_follow_info);
 
 
 router.get('/token', checkToken);
