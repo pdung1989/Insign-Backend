@@ -88,7 +88,7 @@ const deletePost = async (postId, user_id, role_id, next) => {
 };
 
 // edit post and get current date time of edited_date
-const updatePost = async (post) => {
+const updatePost = async (post, next) => {
   let sql =
     'UPDATE post SET title = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP ' +
     'WHERE post_id = ? AND author = ?';
@@ -106,6 +106,8 @@ const updatePost = async (post) => {
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
@@ -127,7 +129,7 @@ const getAllCommentsOfPost = async (postId, next) => {
   }
 };
 
-// search post
+// search post by query title, location...
 const searchPosts = async (req) => {
   try {
     let sqlQuery = 'SELECT * FROM post WHERE 1=1';
