@@ -25,8 +25,13 @@ const {
   post_delete,
   post_get_comments,
   post_search,
+  professtional_list_get,
   post_random,
   post_get_likes,
+  like_post,
+  like_delete,
+  favorite_add,
+  favorite_delete,
 } = require('../controllers/postController');
 
 const router = express.Router();
@@ -44,6 +49,7 @@ router
   );
 
 router.get('/search', post_search);
+router.get('/professional', professtional_list_get);
 
 router
   .route('/:postId')
@@ -56,8 +62,16 @@ router
   )
   .delete(post_delete);
 
-router.get('/:postId/comment', post_get_comments);
+router.route('/:postId/comment')
+  .get(post_get_comments);
 
-router.get('/:postId/likes', post_get_likes);
+router.route('/:postId/likes')
+  .get(post_get_likes)
+  .post(like_post)
+  .delete(like_delete);
+
+  router.route('/:postId/favorites')
+  .post(favorite_add)
+  .delete(favorite_delete);
 
 module.exports = router;

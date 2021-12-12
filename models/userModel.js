@@ -10,7 +10,7 @@ const getAllUsers = async (next) => {
   try {
     const [rows] = await promisePool.execute('SELECT * FROM insign_user');
     return rows;
-  } catch (error) {
+  } catch (e) {
     console.error('model get all users', e.message);
     const err = httpError('Sql error', 500);
     next(err);
@@ -25,7 +25,7 @@ const getUser = async (userId, next) => {
       [userId]
     );
     return rows[0];
-  } catch (error) {
+  } catch (e) {
     console.error('model get user by id', e.message);
     const err = httpError('Sql error', 500);
     next(err);
@@ -50,27 +50,27 @@ const insertUser = async (user, next) => {
   } catch (e) {
     console.error('model insert user', e.message);
     const err = httpError('Sql error', 500);
-    next(err);  
+    next(err);
   }
 };
 
 // delete user
 const deleteUser = async (userId, role_id, next) => {
-  let sql = 'DELETE FROM insign_user WHERE user_id = ? AND role_id = ?'
-  let params = [userId, role_id];
-  // admin can delete user
-  if(role_id === 0) {
-    sql = 'DELETE FROM insign_user WHERE user_id = ?';
-    params = [userId]
+  // only admin can delete user
+  if (role_id === 0) {
+    try {
+      const [rows] = await promisePool.execute(
+        'DELETE FROM insign_user WHERE user_id = ?',
+        [userId]
+      );
+      return rows.affectedRows === 1;
+    } catch (e) {
+      console.error('model delete user', e.message);
+      const err = httpError('Sql error', 500);
+      next(err);
+    }
   }
-  try {
-    const [rows] = await promisePool.execute(sql, params);
-    return rows.affectedRows === 1;
-  } catch (e) {
-    console.error('model delete user', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);  
-  }
+  return false;
 };
 
 // update user
@@ -92,7 +92,7 @@ const updateUser = async (userId, user, next) => {
   } catch (e) {
     console.error('model update user', e.message);
     const err = httpError('Sql error', 500);
-    next(err);  
+    next(err);
   }
 };
 
@@ -100,11 +100,37 @@ const updateUser = async (userId, user, next) => {
 const getAllPostsOfUser = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post.post_id, post.title, post.image, (SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, (SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments FROM post WHERE post.author = ?',
+      'SELECT post.post_id, post.title, post.image, ' +
+        '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
+        '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
+        '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = post.author) as self_like, ' +
+        '(SELECT count(*) from add_to_favorite where add_to_favorite.post_id = post.post_id and add_to_favorite.user_id = post.author) as self_favorite ' +
+        'FROM post WHERE post.author = ? ORDER BY post_id DESC',
       [userId]
     );
     return rows;
-  } catch (error) {
+  } catch (e) {
+    console.error('model get posts of a user', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// get all favotite posts
+const getFavoritePosts = async (userId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT post.post_id, post.title, post.image, ' +
+        '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
+        '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
+        '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = post.author) as self_like, ' +
+        '(SELECT count(*) from add_to_favorite where add_to_favorite.post_id = post.post_id and add_to_favorite.user_id = post.author) as self_favorite ' +
+        'FROM post INNER JOIN add_to_favorite as f ON f.post_id = post.post_id WHERE f.user_id = ? ORDER BY posted_date DESC',
+      [userId]
+    );
+    return rows;
+  } catch (e) {
+    console.error('model get favorite posts', e.message);
     const err = httpError('Sql error', 500);
     next(err);
   }
@@ -115,8 +141,9 @@ const getUserLogin = async (params) => {
   try {
     console.log(params);
     const [rows] = await promisePool.execute(
-        'SELECT * FROM insign_user WHERE email = ?;',
-        params);
+      'SELECT * FROM insign_user WHERE email = ?;',
+      params
+    );
     return rows;
   } catch (e) {
     console.log('error', e.message);
@@ -130,5 +157,6 @@ module.exports = {
   deleteUser,
   updateUser,
   getAllPostsOfUser,
+  getFavoritePosts,
   getUserLogin,
 };

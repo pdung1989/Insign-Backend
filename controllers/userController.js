@@ -7,8 +7,9 @@ const {
   updateUser,
   deleteUser,
   getAllPostsOfUser,
+  getFavoritePosts,
 } = require('../models/userModel');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 
 // get all users
 const user_list_get = async (req, res, next) => {
@@ -54,7 +55,7 @@ const user_delete = async (req, res, next) => {
     res.json({ message: 'user deleted' });
     return;
   }
-  const err = httpError('delete user: unauthorized', 404);
+  const err = httpError('delete user: unauthorized', 401);
   next(err);
 };
 
@@ -74,12 +75,23 @@ const user_update = async (req, res, next) => {
 // get posts by userId
 const user_get_posts = async (req, res, next) => {
   const userPosts = await getAllPostsOfUser(req.params.userId, next);
-  if(userPosts.length === 0) {
+  if (userPosts.length < 1) {
     const err = httpError('Posts of a user not found', 404);
     next(err);
     return;
   }
   res.json(userPosts);
+};
+
+// get favorite posts
+const user_get_favorites = async (req, res, next) => {
+  const favoritePosts = await getFavoritePosts(req.params.userId, next);
+  if (favoritePosts.length < 1) {
+    const err = httpError('Favorite Posts not found', 404);
+    next(err);
+    return;
+  }
+  res.json(favoritePosts);
 };
 
 // check token
@@ -98,5 +110,6 @@ module.exports = {
   user_delete,
   user_update,
   user_get_posts,
+  user_get_favorites,
   checkToken,
 };

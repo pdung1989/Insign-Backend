@@ -14,7 +14,6 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 }
-
 // create upload middleware
 const upload = multer({ dest: './uploads/', fileFilter});
 
@@ -25,6 +24,7 @@ const {
   user_delete,
   user_update,
   user_get_posts,
+  user_get_favorites,
   checkToken,
 } = require('../controllers/userController');
 
@@ -33,7 +33,7 @@ const router = express.Router();
 router.route('/')
   .get(user_list_get)
   .post(
-    upload.single('user'),
+    upload.single('profile_picture'),
     body('username').isLength({ min: 3 }),
     body('email').isEmail(),
     body('password').matches('(?=.*[A-Z]).{8,}'),
@@ -44,13 +44,14 @@ router.route('/:userId')
   .get(user_get)
   .delete(user_delete)
   .put(
-    upload.single('user'),
+    upload.single('profile_picture'),
     body('username').isLength({ min: 3 }),
     body('email').isEmail(),
     body('password').matches('(?=.*[A-Z]).{8,}'),
     user_update);
 
 router.get('/:userId/post', user_get_posts);
+router.get('/:userId/favorites', user_get_favorites);
 
 router.get('/token', checkToken);
 

@@ -1,6 +1,6 @@
 'use strict';
 const { getHomePictures } = require('../models/homeModel');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 
 const home_picture_get = async (req, res, next) => {
   const homePictures = await getHomePictures(next);

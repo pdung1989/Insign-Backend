@@ -1,11 +1,14 @@
 'use strict';
 const pool = require('../database/db');
-const httpError = require('../utils/errors');
+const { httpError } = require('../utils/errors');
 const promisePool = pool.promise();
 
 const getAllCategories = async (next) => {
   try {
-    const [rows] = await promisePool.execute('SELECT * FROM category');
+    const [rows] = await promisePool.execute(
+      'SELECT * FROM category ORDER BY category_id DESC;'
+    );
+    console.log(rows);
     return rows;
   } catch (e) {
     console.log('error', e.message);
@@ -17,7 +20,3 @@ const getAllCategories = async (next) => {
 module.exports = {
   getAllCategories,
 };
-
-
-
-
