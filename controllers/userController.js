@@ -12,6 +12,7 @@ const {
   getAllFollowers,
   insertFollowingUser,
   deleteFollowingUser,
+  getAllFeedPosts,
  //getFollowInfo,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
@@ -163,6 +164,17 @@ const user_delete_following = async (req, res, next) => {
 //   next(err);
 // };
 
+// get all posts of following users on feed page
+const user_get_feed_post = async (req, res, next) => {
+  const allFeedPosts = await getAllFeedPosts(req.user.user_id, next);
+  if(allFeedPosts) {
+    res.json(allFeedPosts);
+    return;
+  }
+  const err = httpError('posts not found', 404);
+  next(err);
+}
+
 module.exports = {
   user_list_get,
   user_get,
@@ -175,6 +187,7 @@ module.exports = {
   user_get_list_follower,
   user_add_following,
   user_delete_following,
+  user_get_feed_post,
   //user_get_follow_info,
   checkToken,
 };
