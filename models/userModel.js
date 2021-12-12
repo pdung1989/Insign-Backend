@@ -167,7 +167,7 @@ const getAllFollowingUsers = async (userId, next) => {
   }
 };
 
-// get all followers of login user
+// get all followers of login user, following_id is the login user_id
 const getAllFollowers = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
@@ -184,7 +184,7 @@ const getAllFollowers = async (userId, next) => {
   }
 };
 
-// add following user
+// follow a user (add a user to following list)
 const insertFollowingUser = async (userId, followingId, next) => {
   try {
     const [rows] = await promisePool.execute(
@@ -199,7 +199,7 @@ const insertFollowingUser = async (userId, followingId, next) => {
   }
 };
 
-// unfollow 
+// unfollow a user (remove a user from following list)
 const deleteFollowingUser = async (userId, followingId, next) => {
   try {
     const [rows] = await promisePool.execute(

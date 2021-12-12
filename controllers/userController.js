@@ -130,7 +130,7 @@ const user_get_list_follower = async (req, res, next) => {
   next(err);
 };
 
-// add following user
+// follow a user
 const user_add_following = async (req, res, next) => {
   const followingUser = await insertFollowingUser(req.user.user_id, req.params.followingId, next);
   if (followingUser) {
@@ -141,7 +141,7 @@ const user_add_following = async (req, res, next) => {
   next(err);
 };
 
-// unfollow 
+// unfollow a user
 const user_delete_following = async (req, res, next) => {
   const unfollowUser = await deleteFollowingUser(req.user.user_id, req.params.followingId, next);
   if (unfollowUser) {
