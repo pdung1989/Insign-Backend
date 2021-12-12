@@ -45,7 +45,7 @@ const getPost = async (userId, postId, next) => {
 };
 
 // add post
-const insertPost = async (post, next) => {
+const insertPost = async (post) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO post(author, title, image, description, category_id, style_id, location) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -62,8 +62,6 @@ const insertPost = async (post, next) => {
     return rows;
   } catch (e) {
     console.log('error', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
   }
 };
 
@@ -88,7 +86,7 @@ const deletePost = async (postId, user_id, role_id, next) => {
 };
 
 // edit post and get current date time of edited_date
-const updatePost = async (post, next) => {
+const updatePost = async (post) => {
   let sql =
     'UPDATE post SET title = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP ' +
     'WHERE post_id = ? AND author = ?';
@@ -106,8 +104,6 @@ const updatePost = async (post, next) => {
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
   }
 };
 

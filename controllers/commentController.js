@@ -52,7 +52,8 @@ const comment_delete = async (req, res, next) => {
   const deletedComment = await deleteComment(
     req.params.commentId,
     req.user.user_id,
-    req.user.role_id
+    req.user.role_id,
+    next
   );
   if(deletedComment) {
     res.json({ message: 'comment deleted'});
