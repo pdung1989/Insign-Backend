@@ -19,12 +19,15 @@ const getAllUsers = async (next) => {
 
 // get user by Id, is_followed = 1 means the user is followed by the logged in user
 // is_followed = 0 means the user is not followed by the logged in user
-const getUser = async (loginUserId, followingId,  userId, next) => {
+// get number of following, get number of follower of a user
+const getUser = async (loginUserId, userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT *, (SELECT count(following_id) from following WHERE following.user_id = ? and following_id = ?) as is_followed ' +
-      'FROM insign_user where user_id = ?',
-      [loginUserId, followingId,  userId]
+      'SELECT *, (SELECT count(following_id) from following WHERE following.user_id = ? and following.following_id = insign_user.user_id) as is_followed, ' +
+        '(SELECT COUNT(following_id) FROM following WHERE following.user_id = insign_user.user_id) as num_following, ' +
+        '(SELECT COUNT(user_id) FROM following WHERE following.following_id = insign_user.user_id) as num_follower ' +
+        'FROM insign_user where insign_user.user_id = ?',
+      [loginUserId, userId]
     );
     return rows[0];
   } catch (e) {
@@ -188,16 +191,19 @@ const getAllFollowers = async (userId, next) => {
 
 // follow a user (add a user to following list)
 const insertFollowingUser = async (userId, followingId, next) => {
-  try {
-    const [rows] = await promisePool.execute(
-      'INSERT INTO following(user_id, following_id) VALUES (?, ?)',
-      [userId, followingId]
-    );
-    return rows;
-  } catch (e) {
-    console.error('model add following user', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
+  if (userId != followingId) {
+    console.log(userId, followingId)
+    try {
+      const [rows] = await promisePool.execute(
+        'INSERT INTO following(user_id, following_id) VALUES (?, ?)',
+        [userId, followingId]
+      );
+      return rows;
+    } catch (e) {
+      console.error('model add following user', e.message);
+      const err = httpError('Sql error', 500);
+      next(err);
+    }
   }
 };
 
@@ -217,21 +223,21 @@ const deleteFollowingUser = async (userId, followingId, next) => {
 };
 
 // get number of following and follower
-const getFollowInfo = async (followingId, userId, next) => {
-  try {
-    const [rows] = await promisePool.execute(
-      'SELECT user_id, COUNT(following_id) as num_following, ' +
-      '(SELECT COUNT(user_id) FROM following WHERE following_id = ?) as num_follower ' +
-      'FROM following WHERE user_id = ?',
-      [followingId, userId]
-    );
-    return rows;
-  } catch (e) {
-    console.error('model get number of followers and following', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
-  }
-};
+// const getFollowInfo = async (followingId, userId, next) => {
+//   try {
+//     const [rows] = await promisePool.execute(
+//       'SELECT user_id, COUNT(following_id) as num_following, ' +
+//       '(SELECT COUNT(user_id) FROM following WHERE following_id = ?) as num_follower ' +
+//       'FROM following WHERE user_id = ?',
+//       [followingId, userId]
+//     );
+//     return rows;
+//   } catch (e) {
+//     console.error('model get number of followers and following', e.message);
+//     const err = httpError('Sql error', 500);
+//     next(err);
+//   }
+// };
 
 module.exports = {
   getAllUsers,
@@ -246,5 +252,5 @@ module.exports = {
   getAllFollowers,
   insertFollowingUser,
   deleteFollowingUser,
-  getFollowInfo,
+  //getFollowInfo,
 };

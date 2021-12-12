@@ -12,7 +12,7 @@ const {
   getAllFollowers,
   insertFollowingUser,
   deleteFollowingUser,
-  getFollowInfo,
+ //getFollowInfo,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 
@@ -30,7 +30,7 @@ const user_list_get = async (req, res, next) => {
 
 // get user by userId
 const user_get = async (req, res, next) => {
-  const user = await getUser(req.user.user_id, req.params.userId, req.params.userId, next);
+  const user = await getUser(req.user.user_id, req.params.userId, next);
   if (user) {
     delete user.password;
     res.json(user);
@@ -153,16 +153,16 @@ const user_delete_following = async (req, res, next) => {
   next(err);
 }
 
-// get number of follower and following
-const user_get_follow_info = async (req, res, next) => {
-  const followInfo = await getFollowInfo(req.params.userId, req.params.userId, next);
-  if (followInfo) {
-    res.json(followInfo);
-    return;
-  }
-  const err = httpError(' not found', 404);
-  next(err);
-};
+// // get number of follower and following
+// const user_get_follow_info = async (req, res, next) => {
+//   const followInfo = await getFollowInfo(req.params.userId, req.params.userId, next);
+//   if (followInfo) {
+//     res.json(followInfo);
+//     return;
+//   }
+//   const err = httpError(' not found', 404);
+//   next(err);
+// };
 
 module.exports = {
   user_list_get,
@@ -176,6 +176,6 @@ module.exports = {
   user_get_list_follower,
   user_add_following,
   user_delete_following,
-  user_get_follow_info,
+  //user_get_follow_info,
   checkToken,
 };
