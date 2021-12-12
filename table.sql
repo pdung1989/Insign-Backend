@@ -51,10 +51,10 @@ CREATE TABLE `add_to_favorite` (
   PRIMARY KEY (`user_id`, `post_id`)
 );
 
-CREATE TABLE `follower` (
+CREATE TABLE `following` (
   `user_id` int,
-  `follower_id` int,
-  PRIMARY KEY (`user_id`, `follower_id`)
+  `following_id` int,
+  PRIMARY KEY (`user_id`, `following_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `role` (

@@ -27,6 +27,7 @@ const {
   user_get_favorites,
   user_get_list_following,
   checkToken,
+  user_add_following,
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -41,6 +42,10 @@ router.route('/')
     user_post)
  ;
 
+router.route('/following')
+  .get(user_get_list_following)
+  .post(user_add_following);
+
 router.route('/:userId')
   .get(user_get)
   .delete(user_delete)
@@ -53,7 +58,7 @@ router.route('/:userId')
 
 router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);
-router.get('/:userId/following', user_get_list_following);
+
 
 router.get('/token', checkToken);
 

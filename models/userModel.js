@@ -154,9 +154,9 @@ const getUserLogin = async (params) => {
 const getAllFollowingUsers = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT u.user_id, u.username, u.profile_picture FROM follower ' +
-        'INNER JOIN insign_user as u ON u.user_id = follower.user_id ' +
-        'WHERE follower_id = ?',
+      'SELECT u.user_id, u.username, u.profile_picture FROM following ' +
+        'INNER JOIN insign_user as u ON u.user_id = following.following_id ' +
+        'WHERE following.user_id = ?',
       [userId]
     );
     return rows;
@@ -168,7 +168,20 @@ const getAllFollowingUsers = async (userId, next) => {
 };
 
 // add following user
-
+const insertFollowingUser = async (following, next) => {
+  console.log(following);
+  try {
+    const [rows] = await promisePool.execute(
+      'INSERT INTO following(user_id, following_id) VALUES (?, ?)',
+      [following.user_id, following.following_id]
+    );
+    return rows;
+  } catch (e) {
+    console.error('model add following user', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+}
 
 module.exports = {
   getAllUsers,
@@ -180,4 +193,5 @@ module.exports = {
   getFavoritePosts,
   getUserLogin,
   getAllFollowingUsers,
+  insertFollowingUser,
 };

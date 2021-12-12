@@ -9,6 +9,7 @@ const {
   getAllPostsOfUser,
   getFavoritePosts,
   getAllFollowingUsers,
+  insertFollowingUser,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 
@@ -107,13 +108,25 @@ const checkToken = (req, res, next) => {
 // get list of following users
 const user_get_list_following = async (req, res, next) => {
   const followingUsers = await getAllFollowingUsers(req.user.user_id, next);
-  if(followingUsers) {
+  if (followingUsers) {
     res.json(followingUsers);
     return;
   }
   const err = httpError(' following users not found', 404);
-    next(err);
-}
+  next(err);
+};
+
+// add following user
+const user_add_following = async (req, res, next) => {
+  req.body.user_id= req.user.user_id;
+  const followingUser = await insertFollowingUser(req.body, next);
+  if (followingUser) {
+    res.json(followingUser);
+    return;
+  }
+  const err = httpError('data not valid', 400);
+  next(err);
+};
 
 module.exports = {
   user_list_get,
@@ -124,5 +137,6 @@ module.exports = {
   user_get_posts,
   user_get_favorites,
   user_get_list_following,
+  user_add_following,
   checkToken,
 };
