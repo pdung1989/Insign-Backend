@@ -150,6 +150,26 @@ const getUserLogin = async (params) => {
   }
 };
 
+// get all following users of login user
+const getAllFollowingUsers = async (userId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT u.user_id, u.username, u.profile_picture FROM follower ' +
+        'INNER JOIN insign_user as u ON u.user_id = follower.user_id ' +
+        'WHERE follower_id = ?',
+      [userId]
+    );
+    return rows;
+  } catch (e) {
+    console.error('model get all following', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// add following user
+
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -159,4 +179,5 @@ module.exports = {
   getAllPostsOfUser,
   getFavoritePosts,
   getUserLogin,
+  getAllFollowingUsers,
 };

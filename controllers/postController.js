@@ -189,6 +189,8 @@ const professtional_list_get = async (req, res, next) => {
   res.json(professionalPosts);
 };
 
+
+
 module.exports = {
   post_list_get,
   post_get,

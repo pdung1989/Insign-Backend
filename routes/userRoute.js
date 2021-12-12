@@ -25,6 +25,7 @@ const {
   user_update,
   user_get_posts,
   user_get_favorites,
+  user_get_list_following,
   checkToken,
 } = require('../controllers/userController');
 
@@ -52,6 +53,7 @@ router.route('/:userId')
 
 router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);
+router.get('/:userId/following', user_get_list_following);
 
 router.get('/token', checkToken);
 
