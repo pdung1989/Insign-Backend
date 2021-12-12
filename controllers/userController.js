@@ -19,7 +19,7 @@ const { httpError } = require('../utils/errors');
 // get all users
 const user_list_get = async (req, res, next) => {
   const users = await getAllUsers(next);
-  if (users.length > 0) {
+  if (users) {
     users.map((user) => delete user.password); // delete user's password before sending data
     res.json(users);
     return;
@@ -80,7 +80,7 @@ const user_update = async (req, res, next) => {
 // get posts by userId
 const user_get_posts = async (req, res, next) => {
   const userPosts = await getAllPostsOfUser(req.params.userId, next);
-  if (userPosts.length < 1) {
+  if (!userPosts) {
     const err = httpError('Posts of a user not found', 404);
     next(err);
     return;
@@ -91,7 +91,7 @@ const user_get_posts = async (req, res, next) => {
 // get favorite posts
 const user_get_favorites = async (req, res, next) => {
   const favoritePosts = await getFavoritePosts(req.params.userId, next);
-  if (favoritePosts.length < 1) {
+  if (!favoritePosts) {
     const err = httpError('Favorite Posts not found', 404);
     next(err);
     return;
@@ -121,7 +121,6 @@ const user_get_list_following = async (req, res, next) => {
 
 // get list of followers
 const user_get_list_follower = async (req, res, next) => {
-  console.log(req.user.user_id)
   const followers = await getAllFollowers(req.user.user_id, next);
   if (followers) {
     res.json(followers);

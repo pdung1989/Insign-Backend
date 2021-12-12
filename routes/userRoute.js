@@ -69,7 +69,6 @@ router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);
 //router.get('/:userId/follow', user_get_follow_info);
 
-
 router.get('/token', checkToken);
 
 module.exports = router;
