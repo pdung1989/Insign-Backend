@@ -32,7 +32,7 @@ INSERT INTO `post` (`author`, `title`, `image`, `description`, `category_id`, `s
 
 CREATE TABLE `likes` (
   `user_id` int NOT NULL,
-  `post_id` int NOT NULL
+  `post_id` int NOT NULL,
   PRIMARY KEY (`user_id`, `post_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

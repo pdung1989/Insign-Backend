@@ -9,7 +9,9 @@ const {
   getAllPostsOfUser,
   getFavoritePosts,
   getAllFollowingUsers,
+  getAllFollowers,
   insertFollowingUser,
+  deleteFollowingUser,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 
@@ -116,10 +118,21 @@ const user_get_list_following = async (req, res, next) => {
   next(err);
 };
 
+// get list of followers
+const user_get_list_follower = async (req, res, next) => {
+  console.log(req.user.user_id)
+  const followers = await getAllFollowers(req.user.user_id, next);
+  if (followers) {
+    res.json(followers);
+    return;
+  }
+  const err = httpError(' followers not found', 404);
+  next(err);
+};
+
 // add following user
 const user_add_following = async (req, res, next) => {
-  req.body.user_id= req.user.user_id;
-  const followingUser = await insertFollowingUser(req.body, next);
+  const followingUser = await insertFollowingUser(req.user.user_id, req.params.followingId, next);
   if (followingUser) {
     res.json(followingUser);
     return;
@@ -127,6 +140,17 @@ const user_add_following = async (req, res, next) => {
   const err = httpError('data not valid', 400);
   next(err);
 };
+
+// unfollow 
+const user_delete_following = async (req, res, next) => {
+  const unfollowUser = await deleteFollowingUser(req.user.user_id, req.params.followingId, next);
+  if (unfollowUser) {
+    res.json(unfollowUser);
+    return;
+  }
+  const err = httpError('data not valid', 400);
+  next(err);
+}
 
 module.exports = {
   user_list_get,
@@ -137,6 +161,8 @@ module.exports = {
   user_get_posts,
   user_get_favorites,
   user_get_list_following,
+  user_get_list_follower,
   user_add_following,
+  user_delete_following,
   checkToken,
 };

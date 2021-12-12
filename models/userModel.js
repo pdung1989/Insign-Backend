@@ -167,17 +167,48 @@ const getAllFollowingUsers = async (userId, next) => {
   }
 };
 
+// get all followers of login user
+const getAllFollowers = async (userId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT u.user_id, u.username, u.profile_picture FROM following ' +
+        'INNER JOIN insign_user as u ON u.user_id = following.user_id ' +
+        'WHERE following.following_id = ?',
+      [userId]
+    );
+    return rows;
+  } catch (e) {
+    console.error('model get all followers', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
 // add following user
-const insertFollowingUser = async (following, next) => {
-  console.log(following);
+const insertFollowingUser = async (userId, followingId, next) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO following(user_id, following_id) VALUES (?, ?)',
-      [following.user_id, following.following_id]
+      [userId, followingId]
     );
     return rows;
   } catch (e) {
     console.error('model add following user', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// unfollow 
+const deleteFollowingUser = async (userId, followingId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'DELETE FROM following WHERE user_id = ? and following_id = ?',
+      [userId, followingId]
+    );
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.error('model delete following user', e.message);
     const err = httpError('Sql error', 500);
     next(err);
   }
@@ -193,5 +224,7 @@ module.exports = {
   getFavoritePosts,
   getUserLogin,
   getAllFollowingUsers,
+  getAllFollowers,
   insertFollowingUser,
+  deleteFollowingUser,
 };

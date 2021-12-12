@@ -8,7 +8,7 @@ const multer = require('multer');
 
 //validate file type with fileFilter
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.includes('profile_picture')) {
+  if (file.mimetype.includes('image')) {
     cb(null, true);
   } else {
     cb(null, false);
@@ -26,8 +26,10 @@ const {
   user_get_posts,
   user_get_favorites,
   user_get_list_following,
-  checkToken,
+  user_get_list_follower,
   user_add_following,
+  checkToken,
+  user_delete_following,
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -43,8 +45,14 @@ router.route('/')
  ;
 
 router.route('/following')
-  .get(user_get_list_following)
-  .post(user_add_following);
+  .get(user_get_list_following);
+
+router.route('/following/:followingId')
+  .post(user_add_following)
+  .delete(user_delete_following);
+
+router.route('/follower')
+  .get(user_get_list_follower);
 
 router.route('/:userId')
   .get(user_get)
