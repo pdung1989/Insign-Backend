@@ -192,7 +192,7 @@ const getAllFollowers = async (userId, next) => {
 // follow a user (add a user to following list)
 const insertFollowingUser = async (userId, followingId, next) => {
   if (userId != followingId) {
-    console.log(userId, followingId)
+    console.log(userId, followingId);
     try {
       const [rows] = await promisePool.execute(
         'INSERT INTO following(user_id, following_id) VALUES (?, ?)',
@@ -239,6 +239,29 @@ const deleteFollowingUser = async (userId, followingId, next) => {
 //   }
 // };
 
+// logged in user gets all posts of the following users in feed page
+const getAllFeedPosts = async (userId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'SELECT post.post_id, post.author, u.username, u.profile_picture, post.title, post.image, post.description, ' +
+        '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
+        '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
+        '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = f.user_id) as self_like ' +
+        'FROM following as f, post, insign_user as u ' +
+        'WHERE f.user_id = ? ' +
+        'AND f.following_id = post.author ' +
+        'AND post.author = u.user_id ' +
+        'ORDER BY post.post_id DESC ',
+      [userId]
+    );
+    return rows;
+  } catch (e) {
+    console.error('model get all posts of following users', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -252,5 +275,6 @@ module.exports = {
   getAllFollowers,
   insertFollowingUser,
   deleteFollowingUser,
+  getAllFeedPosts,
   //getFollowInfo,
 };

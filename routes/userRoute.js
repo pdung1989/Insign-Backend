@@ -29,6 +29,7 @@ const {
   user_get_list_follower,
   user_add_following,
   user_delete_following,
+  user_get_feed_post,
   //user_get_follow_info,
   checkToken,
 } = require('../controllers/userController');
@@ -44,6 +45,9 @@ router.route('/')
     body('password').matches('(?=.*[A-Z]).{8,}'),
     user_post)
  ;
+
+router.route('/feed')
+    .get(user_get_feed_post);
 
 router.route('/following')
   .get(user_get_list_following);
