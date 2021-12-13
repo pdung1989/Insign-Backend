@@ -53,8 +53,13 @@ const user_post = async (req, res, next) => {
   }
 };
 
+const logout = (req, res) => {
+  req.logout();
+  res.json({message: 'logout'});
+};
 
 module.exports = {
   login,
   user_post,
+  logout,
 };
