@@ -139,20 +139,6 @@ const getFavoritePosts = async (userId, next) => {
   }
 };
 
-// user log in
-const getUserLogin = async (params) => {
-  try {
-    console.log(params);
-    const [rows] = await promisePool.execute(
-      'SELECT * FROM insign_user WHERE email = ?;',
-      params
-    );
-    return rows;
-  } catch (e) {
-    console.log('error', e.message);
-  }
-};
-
 // get all following users of login user
 const getAllFollowingUsers = async (userId, next) => {
   try {
@@ -257,6 +243,20 @@ const getAllFeedPosts = async (userId, next) => {
     console.error('model get all posts of following users', e.message);
     const err = httpError('Sql error', 500);
     next(err);
+  }
+};
+
+// user log in
+const getUserLogin = async (params) => {
+  try {
+    console.log(params);
+    const [rows] = await promisePool.execute(
+      'SELECT * FROM insign_user WHERE email = ?;',
+      params
+    );
+    return rows;
+  } catch (e) {
+    console.log('error', e.message);
   }
 };
 

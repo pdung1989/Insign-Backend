@@ -38,12 +38,12 @@ const router = express.Router();
 
 router.route('/')
   .get(user_list_get)
-  .post(
-    upload.single('profile_picture'),
-    body('username').isLength({ min: 3 }),
-    body('email').isEmail(),
-    body('password').matches('(?=.*[A-Z]).{8,}'),
-    user_post)
+  // .post(
+  //   upload.single('profile_picture'),
+  //   body('username').isLength({ min: 3 }),
+  //   body('email').isEmail(),
+  //   body('password').matches('(?=.*[A-Z]).{8,}'),
+  //   user_post)
  ;
 
 router.route('/feed')

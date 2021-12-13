@@ -3,7 +3,6 @@ const { validationResult } = require('express-validator');
 const {
   getUser,
   getAllUsers,
-  insertUser,
   updateUser,
   deleteUser,
   getAllPostsOfUser,
@@ -39,27 +38,6 @@ const user_get = async (req, res, next) => {
   }
   const err = httpError('User not found', 404);
   next(err);
-};
-
-// add new user
-const user_post = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error('user_post validation', errors.array());
-    const err = httpError('data not valid', 400);
-    next(err);
-    return;
-  }
-   // require types of image file when adding user
-   console.log('filename', req.file);
-   if (!req.file) {
-     const err = httpError('Invalid file', 400);
-     next(err);
-     return;
-   }
-  req.body.profile_picture = req.file.filename;
-  const newUser = await insertUser(req.body);
-  res.json(newUser);
 };
 
 // delete user
@@ -194,7 +172,6 @@ const user_get_feed_post = async (req, res, next) => {
 module.exports = {
   user_list_get,
   user_get,
-  user_post,
   user_delete,
   user_update,
   user_get_posts,

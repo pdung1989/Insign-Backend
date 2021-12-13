@@ -23,6 +23,35 @@ const login = (req, res, next) => {
   })(req, res, next);
 };
 
+// add new user
+const user_post = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('user_post validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
+   // require types of image file when adding user
+   if (!req.file) {
+     const err = httpError('Invalid file', 400);
+     next(err);
+     return;
+   }
+  try {
+    req.body.passwd = bcrypt.hashSync(req.body.passwd, 12); // password is hashed
+    req.body.profile_picture = req.file.filename;
+    const newUser = await insertUser(req.body);
+    res.json({message: `user added with id: ${id}`, newUser });  
+  } catch (e) {
+    console.log('user post error', e.message);
+    const err = httpError('Bad request', 400);
+    next(err);
+  }
+};
+
+
 module.exports = {
   login,
+  user_post,
 };

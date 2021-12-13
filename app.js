@@ -1,6 +1,8 @@
 'use strict';
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+
 const httpError = require('./utils/errors');
 const passport = require('./utils/pass');
 const authRoute = require('./routes/authRoute');
@@ -32,6 +34,19 @@ app.use('/comment', passport.authenticate('jwt', { session: false }),commentRout
 app.use('/home', homeRoute);
 app.use('/category', categoryRoute);
 app.use('/style', styleRoute);
+
+// hash password
+app.get('/', async (req, res) => {
+    res.send(await bcrypt.hash('admin', 10));
+});
+
+// app.get('/', async (req, res) => {
+//   if (req.secure) {
+//     res.send(await bcrypt.hash('123456', 10));
+//   } else {
+//     res.send('not secured?');
+//   }
+// }); 
 
 // handling error
 app.use((req, res, next) => {
