@@ -2,6 +2,9 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { httpError } = require('../utils/errors');
+const { validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const { insertUser } = require('../models/userModel');
 
 // passport authenticate
 const login = (req, res, next) => {
@@ -31,6 +34,7 @@ const user_post = async (req, res, next) => {
     next(err);
     return;
   }
+  console.log('add user data', req.body);
    // require types of image file when adding user
    if (!req.file) {
      const err = httpError('Invalid file', 400);
@@ -38,10 +42,10 @@ const user_post = async (req, res, next) => {
      return;
    }
   try {
-    req.body.passwd = bcrypt.hashSync(req.body.passwd, 12); // password is hashed when user registers
+    req.body.password = bcrypt.hashSync(req.body.password, 12); // password is hashed when user registers
     req.body.profile_picture = req.file.filename;
-    const newUser = await insertUser(req.body);
-    res.json({message: `user added with id: ${id}`, newUser });  
+    const id = await insertUser(req.body);
+    res.json({message: 'user added with id: ', user: id });  
   } catch (e) {
     console.log('user post error', e.message);
     const err = httpError('Bad request', 400);
