@@ -34,7 +34,7 @@ const user_post = async (req, res, next) => {
     next(err);
     return;
   }
-  console.log('add user data', req.body);
+  console.log('added new user data');
    // require types of image file when adding user
    if (!req.file) {
      const err = httpError('Invalid file', 400);

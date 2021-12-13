@@ -20,7 +20,6 @@ const upload = multer({ dest: './uploads/', fileFilter});
 const {
   user_get,
   user_list_get,
-  user_post,
   user_delete,
   user_update,
   user_get_posts,
@@ -38,13 +37,12 @@ const router = express.Router();
 
 router.route('/')
   .get(user_list_get)
-  // .post(
-  //   upload.single('profile_picture'),
-  //   body('username').isLength({ min: 3 }),
-  //   body('email').isEmail(),
-  //   body('password').matches('(?=.*[A-Z]).{8,}'),
-  //   user_post)
- ;
+  .put(
+    upload.single('profile_picture'),
+    body('username').isLength({ min: 3 }),
+    body('email').isEmail(),
+    body('password').matches('(?=.*[A-Z]).{8,}'),
+    user_update);
 
 router.route('/feed')
     .get(user_get_feed_post);
@@ -62,12 +60,7 @@ router.route('/follower')
 router.route('/:userId')
   .get(user_get)
   .delete(user_delete)
-  .put(
-    upload.single('profile_picture'),
-    body('username').isLength({ min: 3 }),
-    body('email').isEmail(),
-    body('password').matches('(?=.*[A-Z]).{8,}'),
-    user_update);
+  ;
 
 router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);

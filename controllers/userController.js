@@ -15,6 +15,7 @@ const {
  //getFollowInfo,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
+const bcrypt = require('bcryptjs');
 
 // get all users
 const user_list_get = async (req, res, next) => {
@@ -67,9 +68,16 @@ const user_update = async (req, res, next) => {
      next(err);
      return;
    }
-  req.body.profile_picture = req.file.filename;
-  const updatedUser = await updateUser(req.params.userId, req.body);
-  res.json({ message: 'user is updated', updatedUser });
+   try {
+    req.body.password = bcrypt.hashSync(req.body.password, 12);
+    req.body.profile_picture = req.file.filename;
+    const updatedUser = await updateUser(req.user.user_id, req.body);
+    res.json({ message: 'user is updated', updatedUser });
+   } catch (error) {
+    console.log('user update error', e.message);
+    const err = httpError('Bad request', 400);
+    next(err);
+   }
 };
 
 // get posts by userId
