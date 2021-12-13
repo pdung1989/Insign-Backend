@@ -11,7 +11,6 @@ const login = (req, res, next) => {
       next(httpError('username / password incorrect', 400));
       return;
     }
-
     req.login(user, { session: false }, (err) => {
       if (err) {
         next(httpError('login error', 400));
@@ -39,7 +38,7 @@ const user_post = async (req, res, next) => {
      return;
    }
   try {
-    req.body.passwd = bcrypt.hashSync(req.body.passwd, 12); // password is hashed
+    req.body.passwd = bcrypt.hashSync(req.body.passwd, 12); // password is hashed when user registers
     req.body.profile_picture = req.file.filename;
     const newUser = await insertUser(req.body);
     res.json({message: `user added with id: ${id}`, newUser });  
