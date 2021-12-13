@@ -8,7 +8,7 @@ const multer = require('multer');
 
 //validate file type with fileFilter
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.includes('profile_picture')) {
+  if (file.mimetype.includes('image')) {
     cb(null, true);
   } else {
     cb(null, false);
@@ -25,6 +25,12 @@ const {
   user_update,
   user_get_posts,
   user_get_favorites,
+  user_get_list_following,
+  user_get_list_follower,
+  user_add_following,
+  user_delete_following,
+  user_get_feed_post,
+  //user_get_follow_info,
   checkToken,
 } = require('../controllers/userController');
 
@@ -40,6 +46,19 @@ router.route('/')
     user_post)
  ;
 
+router.route('/feed')
+    .get(user_get_feed_post);
+
+router.route('/following')
+  .get(user_get_list_following);
+
+router.route('/following/:followingId')
+  .post(user_add_following)
+  .delete(user_delete_following);
+
+router.route('/follower')
+  .get(user_get_list_follower);
+
 router.route('/:userId')
   .get(user_get)
   .delete(user_delete)
@@ -52,6 +71,7 @@ router.route('/:userId')
 
 router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);
+//router.get('/:userId/follow', user_get_follow_info);
 
 router.get('/token', checkToken);
 

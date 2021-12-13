@@ -33,7 +33,7 @@ const getComment = async (commentId, next) => {
 };
 
 // add comment
-const insertComment = async (comment, next) => {
+const insertComment = async (comment) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO comment(user_id, post_id, content) VALUES (?, ?, ?)',
@@ -42,8 +42,6 @@ const insertComment = async (comment, next) => {
     return rows;
   } catch (e) {
     console.log('error', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
   }
 };
 
@@ -68,8 +66,9 @@ const deleteComment = async (commentId, user_id, role_id, next) => {
 
 // update comment and update also edited_date with current timestamp
 const updateComment = async (comment) => {
-  let sql = 'UPDATE comment SET content = ?, edited_date = CURRENT_TIMESTAMP WHERE comment_id = ? AND user_id = ?';
-  let params = [comment.content, comment.comment_id, comment.user_id]
+  let sql =
+    'UPDATE comment SET content = ?, edited_date = CURRENT_TIMESTAMP WHERE comment_id = ? AND user_id = ?';
+  let params = [comment.content, comment.comment_id, comment.user_id];
   try {
     const [rows] = await promisePool.execute(sql, params);
 

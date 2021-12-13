@@ -8,13 +8,19 @@ const {
   deleteUser,
   getAllPostsOfUser,
   getFavoritePosts,
+  getAllFollowingUsers,
+  getAllFollowers,
+  insertFollowingUser,
+  deleteFollowingUser,
+  getAllFeedPosts,
+ //getFollowInfo,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 
 // get all users
 const user_list_get = async (req, res, next) => {
   const users = await getAllUsers(next);
-  if (users.length > 0) {
+  if (users) {
     users.map((user) => delete user.password); // delete user's password before sending data
     res.json(users);
     return;
@@ -25,7 +31,7 @@ const user_list_get = async (req, res, next) => {
 
 // get user by userId
 const user_get = async (req, res, next) => {
-  const user = await getUser(req.params.userId, next);
+  const user = await getUser(req.user.user_id, req.params.userId, next);
   if (user) {
     delete user.password;
     res.json(user);
@@ -75,7 +81,7 @@ const user_update = async (req, res, next) => {
 // get posts by userId
 const user_get_posts = async (req, res, next) => {
   const userPosts = await getAllPostsOfUser(req.params.userId, next);
-  if (userPosts.length < 1) {
+  if (!userPosts) {
     const err = httpError('Posts of a user not found', 404);
     next(err);
     return;
@@ -86,7 +92,7 @@ const user_get_posts = async (req, res, next) => {
 // get favorite posts
 const user_get_favorites = async (req, res, next) => {
   const favoritePosts = await getFavoritePosts(req.params.userId, next);
-  if (favoritePosts.length < 1) {
+  if (!favoritePosts) {
     const err = httpError('Favorite Posts not found', 404);
     next(err);
     return;
@@ -103,6 +109,72 @@ const checkToken = (req, res, next) => {
   }
 };
 
+// get list of following users
+const user_get_list_following = async (req, res, next) => {
+  const followingUsers = await getAllFollowingUsers(req.user.user_id, next);
+  if (followingUsers) {
+    res.json(followingUsers);
+    return;
+  }
+  const err = httpError(' following users not found', 404);
+  next(err);
+};
+
+// get list of followers
+const user_get_list_follower = async (req, res, next) => {
+  const followers = await getAllFollowers(req.user.user_id, next);
+  if (followers) {
+    res.json(followers);
+    return;
+  }
+  const err = httpError(' followers not found', 404);
+  next(err);
+};
+
+// follow a user
+const user_add_following = async (req, res, next) => {
+  const followingUser = await insertFollowingUser(req.user.user_id, req.params.followingId, next);
+  if (followingUser) {
+    res.json(followingUser);
+    return;
+  }
+  const err = httpError('data not valid', 400);
+  next(err);
+};
+
+// unfollow a user
+const user_delete_following = async (req, res, next) => {
+  const unfollowUser = await deleteFollowingUser(req.user.user_id, req.params.followingId, next);
+  if (unfollowUser) {
+    res.json(unfollowUser);
+    return;
+  }
+  const err = httpError('data not valid', 400);
+  next(err);
+}
+
+// // get number of follower and following
+// const user_get_follow_info = async (req, res, next) => {
+//   const followInfo = await getFollowInfo(req.params.userId, req.params.userId, next);
+//   if (followInfo) {
+//     res.json(followInfo);
+//     return;
+//   }
+//   const err = httpError(' not found', 404);
+//   next(err);
+// };
+
+// get all posts of following users on feed page
+const user_get_feed_post = async (req, res, next) => {
+  const allFeedPosts = await getAllFeedPosts(req.user.user_id, next);
+  if(allFeedPosts) {
+    res.json(allFeedPosts);
+    return;
+  }
+  const err = httpError('posts not found', 404);
+  next(err);
+}
+
 module.exports = {
   user_list_get,
   user_get,
@@ -111,5 +183,11 @@ module.exports = {
   user_update,
   user_get_posts,
   user_get_favorites,
+  user_get_list_following,
+  user_get_list_follower,
+  user_add_following,
+  user_delete_following,
+  user_get_feed_post,
+  //user_get_follow_info,
   checkToken,
 };

@@ -28,12 +28,12 @@ const getAllPosts = async (next) => {
 const getPost = async (userId, postId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post_id, author, title, image, description, location, posted_date, ' +
+      'SELECT post_id, author, title, image, description, location,  c.category_name, s.style_name, posted_date, ' +
         '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
         '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
         '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = ?) as self_like, ' +
         '(SELECT count(*) from add_to_favorite where add_to_favorite.post_id = post.post_id and add_to_favorite.user_id = ?) as self_favorite ' +
-        'FROM post WHERE post_id = ?',
+        'FROM post, category as c, style as s WHERE post_id = ? AND post.category_id = c.category_id AND post.style_id = s.style_id',
       [userId, userId, postId]
     );
     return rows[0];
@@ -45,7 +45,7 @@ const getPost = async (userId, postId, next) => {
 };
 
 // add post
-const insertPost = async (post, next) => {
+const insertPost = async (post) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO post(author, title, image, description, category_id, style_id, location) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -62,8 +62,6 @@ const insertPost = async (post, next) => {
     return rows;
   } catch (e) {
     console.log('error', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
   }
 };
 
@@ -88,7 +86,7 @@ const deletePost = async (postId, user_id, role_id, next) => {
 };
 
 // edit post and get current date time of edited_date
-const updatePost = async (post, next) => {
+const updatePost = async (post) => {
   let sql =
     'UPDATE post SET title = ?, description = ?, category_id = ?, style_id = ?, location = ?, edited_date = CURRENT_TIMESTAMP ' +
     'WHERE post_id = ? AND author = ?';
@@ -106,8 +104,6 @@ const updatePost = async (post, next) => {
     return rows.affectedRows === 1;
   } catch (e) {
     console.log('error', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
   }
 };
 

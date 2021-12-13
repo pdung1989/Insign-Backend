@@ -14,4 +14,4 @@ const home_picture_get = async (req, res, next) => {
 
 module.exports = {
   home_picture_get,
-}
+};
