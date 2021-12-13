@@ -28,12 +28,12 @@ const getAllPosts = async (next) => {
 const getPost = async (userId, postId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post_id, author, title, image, description, location, posted_date, ' +
+      'SELECT post_id, author, title, image, description, location,  c.category_name, s.style_name, posted_date, ' +
         '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
         '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
         '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = ?) as self_like, ' +
         '(SELECT count(*) from add_to_favorite where add_to_favorite.post_id = post.post_id and add_to_favorite.user_id = ?) as self_favorite ' +
-        'FROM post WHERE post_id = ?',
+        'FROM post, category as c, style as s WHERE post_id = ? AND post.category_id = c.category_id AND post.style_id = s.style_id',
       [userId, userId, postId]
     );
     return rows[0];
