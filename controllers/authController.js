@@ -44,8 +44,8 @@ const user_post = async (req, res, next) => {
   try {
     req.body.password = bcrypt.hashSync(req.body.password, 12); // password is hashed when user registers
     req.body.profile_picture = req.file.filename;
-    const id = await insertUser(req.body);
-    res.json({message: 'user added with id: ', user: id });  
+    const user = await insertUser(req.body);
+    res.json({message: `user added with id: ${user.insertId}`, user: user });  
   } catch (e) {
     console.log('user post error', e.message);
     const err = httpError('Bad request', 400);
