@@ -38,7 +38,7 @@ const getUser = async (loginUserId, userId, next) => {
 };
 
 // add new user
-const insertUser = async (user, next) => {
+const insertUser = async (user) => {
   try {
     const [rows] = await promisePool.execute(
       'INSERT INTO insign_user(username, email, password, profile_picture, bio, role_id) VALUES(?, ?, ?, ?, ?, ?)',
@@ -54,8 +54,6 @@ const insertUser = async (user, next) => {
     return rows;
   } catch (e) {
     console.error('model insert user', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
   }
 };
 

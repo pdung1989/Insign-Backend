@@ -50,6 +50,14 @@ const user_post = async (req, res, next) => {
     next(err);
     return;
   }
+   // require types of image file when adding user
+   console.log('filename', req.file);
+   if (!req.file) {
+     const err = httpError('Invalid file', 400);
+     next(err);
+     return;
+   }
+  req.body.profile_picture = req.file.filename;
   const newUser = await insertUser(req.body);
   res.json(newUser);
 };
@@ -74,7 +82,15 @@ const user_update = async (req, res, next) => {
     next(err);
     return;
   }
-  const updatedUser = await updateUser(req.params.userId, req.body, next);
+   // require types of image file when updating user
+   console.log('filename', req.file);
+   if (!req.file) {
+     const err = httpError('Invalid file', 400);
+     next(err);
+     return;
+   }
+  req.body.profile_picture = req.file.filename;
+  const updatedUser = await updateUser(req.params.userId, req.body);
   res.json({ message: 'user is updated', updatedUser });
 };
 
