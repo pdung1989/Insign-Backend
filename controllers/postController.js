@@ -5,7 +5,6 @@ const { httpError } = require('../utils/errors');
 // object detructuring, import only posts from postModel
 const {
   getPost,
-  getAllPosts,
   insertPost,
   deletePost,
   updatePost,
@@ -19,17 +18,6 @@ const {
   deleteFromFavorite,
   getProfessionalPosts,
 } = require('../models/postModel');
-
-/* REMOVE ?*/
-const post_list_get = async (req, res, next) => {
-  const posts = await getAllPosts(next);
-  if (!posts) {
-    const err = httpError('Posts not found', 404);
-    next(err);
-    return;
-  }
-  res.json(posts);
-};
 
 // get post by Id
 const post_get = async (req, res, next) => {
@@ -190,7 +178,6 @@ const professtional_list_get = async (req, res, next) => {
 };
 
 module.exports = {
-  post_list_get,
   post_get,
   post_post,
   post_delete,

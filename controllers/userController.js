@@ -12,7 +12,6 @@ const {
   insertFollowingUser,
   deleteFollowingUser,
   getAllFeedPosts,
- //getFollowInfo,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 const bcrypt = require('bcryptjs');
@@ -155,17 +154,6 @@ const user_delete_following = async (req, res, next) => {
   next(err);
 }
 
-// // get number of follower and following
-// const user_get_follow_info = async (req, res, next) => {
-//   const followInfo = await getFollowInfo(req.params.userId, req.params.userId, next);
-//   if (followInfo) {
-//     res.json(followInfo);
-//     return;
-//   }
-//   const err = httpError(' not found', 404);
-//   next(err);
-// };
-
 // get all posts of following users on feed page
 const user_get_feed_post = async (req, res, next) => {
   const allFeedPosts = await getAllFeedPosts(req.user.user_id, next);
@@ -189,6 +177,5 @@ module.exports = {
   user_add_following,
   user_delete_following,
   user_get_feed_post,
-  //user_get_follow_info,
   checkToken,
 };

@@ -18,7 +18,6 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ dest: './uploads/', fileFilter });
 
 const {
-  post_list_get,
   post_get,
   post_post,
   post_update,

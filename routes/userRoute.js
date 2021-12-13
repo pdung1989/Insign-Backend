@@ -16,7 +16,6 @@ const fileFilter = (req, file, cb) => {
 }
 // create upload middleware
 const upload = multer({ dest: './uploads/', fileFilter});
-
 const {
   user_get,
   user_list_get,
@@ -29,7 +28,6 @@ const {
   user_add_following,
   user_delete_following,
   user_get_feed_post,
-  //user_get_follow_info,
   checkToken,
 } = require('../controllers/userController');
 
@@ -59,13 +57,10 @@ router.route('/follower')
 
 router.route('/:userId')
   .get(user_get)
-  .delete(user_delete)
-  ;
+  .delete(user_delete);
 
 router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);
-//router.get('/:userId/follow', user_get_follow_info);
-
 router.get('/token', checkToken);
 
 module.exports = router;

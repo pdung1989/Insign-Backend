@@ -206,23 +206,6 @@ const deleteFollowingUser = async (userId, followingId, next) => {
   }
 };
 
-// get number of following and follower
-// const getFollowInfo = async (followingId, userId, next) => {
-//   try {
-//     const [rows] = await promisePool.execute(
-//       'SELECT user_id, COUNT(following_id) as num_following, ' +
-//       '(SELECT COUNT(user_id) FROM following WHERE following_id = ?) as num_follower ' +
-//       'FROM following WHERE user_id = ?',
-//       [followingId, userId]
-//     );
-//     return rows;
-//   } catch (e) {
-//     console.error('model get number of followers and following', e.message);
-//     const err = httpError('Sql error', 500);
-//     next(err);
-//   }
-// };
-
 // logged in user gets all posts of the following users in feed page
 const getAllFeedPosts = async (userId, next) => {
   try {
@@ -274,5 +257,4 @@ module.exports = {
   insertFollowingUser,
   deleteFollowingUser,
   getAllFeedPosts,
-  //getFollowInfo,
 };
