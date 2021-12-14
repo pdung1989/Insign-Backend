@@ -4,25 +4,6 @@ const pool = require('../database/db');
 const { httpError } = require('../utils/errors');
 const promisePool = pool.promise();
 
-// use async/await to handle fetching data
-/* get all posts ---REMOVE? */
-const getAllPosts = async (next) => {
-  try {
-    const [rows] = await promisePool.execute(
-      'SELECT post_id, u.username AS author, title, image, description, c.category_name as category, s.style_name as style, location ' +
-        'FROM post INNER JOIN insign_user as u ON u.user_id = post.author ' +
-        'INNER JOIN category as c ON c.category_id = post.category_id ' +
-        'INNER JOIN style as s ON s.style_id = post.style_id ' +
-        'ORDER BY RAND () LIMIT 9'
-    );
-    return rows;
-  } catch (e) {
-    console.log('error', e.message);
-    const err = httpError('Sql error', 500);
-    next(err);
-  }
-};
-
 // get post by Id, a post has author's name, numbers of likes and numbers of comments
 // if self_like = 1 means user liked the post, self_like = 2, user has not like
 const getPost = async (userId, postId, next) => {
@@ -125,8 +106,8 @@ const getAllCommentsOfPost = async (postId, next) => {
   }
 };
 
-// search post by query title, location...
-const searchPosts = async (req) => {
+// search post by query title
+const searchPosts = async (req, next) => {
   try {
     let sqlQuery = 'SELECT * FROM post WHERE 1=1';
 
@@ -134,33 +115,17 @@ const searchPosts = async (req) => {
 
     const [rows] = await promisePool.execute(sqlQuery);
     return rows;
-  } catch (error) {
-    console.log(error.message);
+  } catch (e) {
+    console.error('model search posts', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 
 const buildSearchPostQuery = (req, sqlQuery) => {
-  if (req.query.userId) {
-    sqlQuery += ' AND author = ' + req.query.userId;
-  }
-
-  if (req.query.styleId) {
-    sqlQuery += ' AND style_id = ' + req.query.styleId;
-  }
-
-  if (req.query.categoryId) {
-    sqlQuery += ' AND category_id = ' + req.query.categoryId;
-  }
-
   if (req.query.title) {
     sqlQuery += " AND title like '%" + req.query.title + "%'";
   }
-
-  if (req.query.location) {
-    sqlQuery += " AND location = '" + req.query.location + "'";
-  }
-
-  console.log(sqlQuery);
   return sqlQuery;
 };
 
@@ -259,7 +224,7 @@ const deleteFromFavorite = async (postId, userId, next) => {
   }
 };
 
-// get all posts from professional/designer (role_id=2)
+// get posts from professional/designer, order randomly, limit with 2 posts (role_id=2)
 const getProfessionalPosts = async (next) => {
   try {
     const [rows] = await promisePool.execute(
@@ -280,7 +245,6 @@ const getProfessionalPosts = async (next) => {
 };
 
 module.exports = {
-  getAllPosts,
   getPost,
   insertPost,
   deletePost,

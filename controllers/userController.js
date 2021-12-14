@@ -3,7 +3,6 @@ const { validationResult } = require('express-validator');
 const {
   getUser,
   getAllUsers,
-  insertUser,
   updateUser,
   deleteUser,
   getAllPostsOfUser,
@@ -13,9 +12,9 @@ const {
   insertFollowingUser,
   deleteFollowingUser,
   getAllFeedPosts,
- //getFollowInfo,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
+const bcrypt = require('bcryptjs');
 
 // get all users
 const user_list_get = async (req, res, next) => {
@@ -39,27 +38,6 @@ const user_get = async (req, res, next) => {
   }
   const err = httpError('User not found', 404);
   next(err);
-};
-
-// add new user
-const user_post = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error('user_post validation', errors.array());
-    const err = httpError('data not valid', 400);
-    next(err);
-    return;
-  }
-   // require types of image file when adding user
-   console.log('filename', req.file);
-   if (!req.file) {
-     const err = httpError('Invalid file', 400);
-     next(err);
-     return;
-   }
-  req.body.profile_picture = req.file.filename;
-  const newUser = await insertUser(req.body);
-  res.json(newUser);
 };
 
 // delete user
@@ -89,9 +67,16 @@ const user_update = async (req, res, next) => {
      next(err);
      return;
    }
-  req.body.profile_picture = req.file.filename;
-  const updatedUser = await updateUser(req.params.userId, req.body);
-  res.json({ message: 'user is updated', updatedUser });
+   try {
+    req.body.password = bcrypt.hashSync(req.body.password, 12);
+    req.body.profile_picture = req.file.filename;
+    const updatedUser = await updateUser(req.user.user_id, req.body);
+    res.json({ message: 'user is updated', updatedUser });
+   } catch (error) {
+    console.log('user update error', e.message);
+    const err = httpError('Bad request', 400);
+    next(err);
+   }
 };
 
 // get posts by userId
@@ -169,17 +154,6 @@ const user_delete_following = async (req, res, next) => {
   next(err);
 }
 
-// // get number of follower and following
-// const user_get_follow_info = async (req, res, next) => {
-//   const followInfo = await getFollowInfo(req.params.userId, req.params.userId, next);
-//   if (followInfo) {
-//     res.json(followInfo);
-//     return;
-//   }
-//   const err = httpError(' not found', 404);
-//   next(err);
-// };
-
 // get all posts of following users on feed page
 const user_get_feed_post = async (req, res, next) => {
   const allFeedPosts = await getAllFeedPosts(req.user.user_id, next);
@@ -194,7 +168,6 @@ const user_get_feed_post = async (req, res, next) => {
 module.exports = {
   user_list_get,
   user_get,
-  user_post,
   user_delete,
   user_update,
   user_get_posts,
@@ -204,6 +177,5 @@ module.exports = {
   user_add_following,
   user_delete_following,
   user_get_feed_post,
-  //user_get_follow_info,
   checkToken,
 };

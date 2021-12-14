@@ -16,11 +16,9 @@ const fileFilter = (req, file, cb) => {
 }
 // create upload middleware
 const upload = multer({ dest: './uploads/', fileFilter});
-
 const {
   user_get,
   user_list_get,
-  user_post,
   user_delete,
   user_update,
   user_get_posts,
@@ -30,7 +28,6 @@ const {
   user_add_following,
   user_delete_following,
   user_get_feed_post,
-  //user_get_follow_info,
   checkToken,
 } = require('../controllers/userController');
 
@@ -38,13 +35,12 @@ const router = express.Router();
 
 router.route('/')
   .get(user_list_get)
-  .post(
+  .put(
     upload.single('profile_picture'),
     body('username').isLength({ min: 3 }),
     body('email').isEmail(),
     body('password').matches('(?=.*[A-Z]).{8,}'),
-    user_post)
- ;
+    user_update);
 
 router.route('/feed')
     .get(user_get_feed_post);
@@ -61,18 +57,10 @@ router.route('/follower')
 
 router.route('/:userId')
   .get(user_get)
-  .delete(user_delete)
-  .put(
-    upload.single('profile_picture'),
-    body('username').isLength({ min: 3 }),
-    body('email').isEmail(),
-    body('password').matches('(?=.*[A-Z]).{8,}'),
-    user_update);
+  .delete(user_delete);
 
 router.get('/:userId/post', user_get_posts);
 router.get('/:userId/favorites', user_get_favorites);
-//router.get('/:userId/follow', user_get_follow_info);
-
 router.get('/token', checkToken);
 
 module.exports = router;

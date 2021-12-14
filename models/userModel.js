@@ -139,20 +139,6 @@ const getFavoritePosts = async (userId, next) => {
   }
 };
 
-// user log in
-const getUserLogin = async (params) => {
-  try {
-    console.log(params);
-    const [rows] = await promisePool.execute(
-      'SELECT * FROM insign_user WHERE email = ?;',
-      params
-    );
-    return rows;
-  } catch (e) {
-    console.log('error', e.message);
-  }
-};
-
 // get all following users of login user
 const getAllFollowingUsers = async (userId, next) => {
   try {
@@ -220,23 +206,6 @@ const deleteFollowingUser = async (userId, followingId, next) => {
   }
 };
 
-// get number of following and follower
-// const getFollowInfo = async (followingId, userId, next) => {
-//   try {
-//     const [rows] = await promisePool.execute(
-//       'SELECT user_id, COUNT(following_id) as num_following, ' +
-//       '(SELECT COUNT(user_id) FROM following WHERE following_id = ?) as num_follower ' +
-//       'FROM following WHERE user_id = ?',
-//       [followingId, userId]
-//     );
-//     return rows;
-//   } catch (e) {
-//     console.error('model get number of followers and following', e.message);
-//     const err = httpError('Sql error', 500);
-//     next(err);
-//   }
-// };
-
 // logged in user gets all posts of the following users in feed page
 const getAllFeedPosts = async (userId, next) => {
   try {
@@ -260,6 +229,20 @@ const getAllFeedPosts = async (userId, next) => {
   }
 };
 
+// user log in
+const getUserLogin = async (params) => {
+  try {
+    console.log(params);
+    const [rows] = await promisePool.execute(
+      'SELECT * FROM insign_user WHERE email = ?;',
+      params
+    );
+    return rows;
+  } catch (e) {
+    console.log('error', e.message);
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -274,5 +257,4 @@ module.exports = {
   insertFollowingUser,
   deleteFollowingUser,
   getAllFeedPosts,
-  //getFollowInfo,
 };
