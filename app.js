@@ -12,7 +12,7 @@ const commentRoute = require('./routes/commentRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const styleRoute = require('./routes/styleRoute');
 const homeRoute = require('./routes/homeRoute');
-
+const roleRoute = require('./routes/roleRoute.js');
 
 const app = express();
 const port = 3000;
@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 // for authentication
 app.use(passport.initialize());
 
+// main routes
 app.use('/uploads', express.static('uploads'));
 app.use('/auth', authRoute);
 app.use('/post', passport.authenticate('jwt', { session: false }), postRoute);
@@ -34,19 +35,12 @@ app.use('/comment', passport.authenticate('jwt', { session: false }),commentRout
 app.use('/home', homeRoute);
 app.use('/category', categoryRoute);
 app.use('/style', styleRoute);
+app.use('/role', roleRoute);
 
 // hash password
 app.get('/', async (req, res) => {
     res.send(await bcrypt.hash('admin', 10));
 });
-
-// app.get('/', async (req, res) => {
-//   if (req.secure) {
-//     res.send(await bcrypt.hash('123456', 10));
-//   } else {
-//     res.send('not secured?');
-//   }
-// }); 
 
 // handling error
 app.use((req, res, next) => {
