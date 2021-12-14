@@ -1,6 +1,6 @@
 CREATE TABLE `insign_user` (
   `user_id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `username` text NOT NULL UNIQUE,
+  `username` text NOT NULL,
   `email` text NOT NULL UNIQUE,
   `password` text NOT NULL,
   `profile_picture` text NOT NULL,
