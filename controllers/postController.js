@@ -2,7 +2,6 @@
 /* postController*/
 const { validationResult } = require('express-validator');
 const { httpError } = require('../utils/errors');
-// object detructuring, import only posts from postModel
 const {
   getPost,
   insertPost,
@@ -30,6 +29,7 @@ const post_get = async (req, res, next) => {
   res.json(post);
 };
 
+// add a new post
 const post_post = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -95,9 +95,13 @@ const post_get_comments = async (req, res, next) => {
 };
 
 // search posts by query params
-const post_search = async (req, res) => {
-  const posts = await searchPosts(req);
-  console.log('search posts', posts);
+const post_search = async (req, res, next) => {
+  const posts = await searchPosts(req, next);
+  if (posts.length < 1) {
+    const err = httpError('Posts not found', 404);
+    next(err);
+    return;
+  }
   res.json(posts);
 };
 

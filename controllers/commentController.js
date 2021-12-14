@@ -55,8 +55,8 @@ const comment_delete = async (req, res, next) => {
     req.user.role_id,
     next
   );
-  if(deletedComment) {
-    res.json({ message: 'comment deleted'});
+  if (deletedComment) {
+    res.json({ message: 'comment deleted' });
     return;
   }
   const err = httpError('delete comment: unauthorized', 401);
@@ -72,7 +72,6 @@ const comment_update = async (req, res, next) => {
     next(err);
     return;
   }
-
   req.body.comment_id = req.params.commentId;
   req.body.user_id = req.body.user_id || req.user.user_id;
   const updatedComment = await updateComment(req.body);

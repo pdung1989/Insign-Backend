@@ -106,8 +106,8 @@ const getAllCommentsOfPost = async (postId, next) => {
   }
 };
 
-// search post by query title, location...
-const searchPosts = async (req) => {
+// search post by query title
+const searchPosts = async (req, next) => {
   try {
     let sqlQuery = 'SELECT * FROM post WHERE 1=1';
 
@@ -115,8 +115,10 @@ const searchPosts = async (req) => {
 
     const [rows] = await promisePool.execute(sqlQuery);
     return rows;
-  } catch (error) {
-    console.log(error.message);
+  } catch (e) {
+    console.error('model search posts', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
   }
 };
 

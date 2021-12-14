@@ -6,7 +6,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const { insertUser } = require('../models/userModel');
 
-// passport authenticate
+// using passport for authentication
 const login = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     console.log('local params', err, user, info);
