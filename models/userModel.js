@@ -80,10 +80,9 @@ const deleteUser = async (userId, role_id, next) => {
 const updateUser = async (userId, user, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'UPDATE insign_user SET username = ?, email = ?, password = ?, profile_picture = ?, bio= ?, role_id = ? WHERE user_id = ?',
+      'UPDATE insign_user SET username = ?, password = ?, profile_picture = ?, bio= ?, role_id = ? WHERE user_id = ?',
       [
         user.username,
-        user.email,
         user.password,
         user.profile_picture,
         user.bio || null,

@@ -38,7 +38,6 @@ router.route('/')
   .put(
     upload.single('profile_picture'),
     body('username').isLength({ min: 3 }),
-    body('email').isEmail(),
     body('password').matches('(?=.*[A-Z]).{8,}'),
     user_update);
 
