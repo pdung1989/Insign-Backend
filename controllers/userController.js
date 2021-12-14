@@ -12,6 +12,7 @@ const {
   insertFollowingUser,
   deleteFollowingUser,
   getAllFeedPosts,
+  updateProfilePicture,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 const bcrypt = require('bcryptjs');
@@ -51,7 +52,7 @@ const user_delete = async (req, res, next) => {
   next(err);
 };
 
-// update user
+// update user information
 const user_update = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -60,23 +61,51 @@ const user_update = async (req, res, next) => {
     next(err);
     return;
   }
-   // require types of image file when updating user
-   console.log('filename', req.file);
-   if (!req.file) {
-     const err = httpError('Invalid file', 400);
-     next(err);
-     return;
-   }
-   try {
-    req.body.password = bcrypt.hashSync(req.body.password, 12);
-    req.body.profile_picture = req.file.filename;
+  try {
+    // check if the password and the retype password are matched
+    // if(req.body.password[0] !== req.body.password[1]) {
+    //   const error = httpError('password not match', 400);
+    //   next(error);
+    //   return;
+    // }
+    req.body.password = bcrypt.hashSync(req.body.password, 12); 
     const updatedUser = await updateUser(req.user.user_id, req.body);
     res.json({ message: 'user is updated', updatedUser });
-   } catch (error) {
+  } catch (e) {
     console.log('user update error', e.message);
     const err = httpError('Bad request', 400);
     next(err);
-   }
+  }
+};
+
+// user update profile_picture
+const user_update_picture = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.error('user_post validation', errors.array());
+    const err = httpError('data not valid', 400);
+    next(err);
+    return;
+  }
+  // require types of image file when updating user
+  console.log('filename', req.file);
+  if (!req.file) {
+    const err = httpError('Invalid file', 400);
+    next(err);
+    return;
+  }
+  try {
+    req.body.profile_picture = req.file.filename;
+    const profilePicture = await updateProfilePicture(
+      req.body,
+      req.user.user_id
+    );
+    res.json({ message: 'user profile picture is updated', profilePicture });
+  } catch (e) {
+    console.log('user update profile picture error', e.message);
+    const err = httpError('Bad request', 400);
+    next(err);
+  }
 };
 
 // get posts by userId
@@ -99,15 +128,6 @@ const user_get_favorites = async (req, res, next) => {
     return;
   }
   res.json(favoritePosts);
-};
-
-// check token
-const checkToken = (req, res, next) => {
-  if (!req.user) {
-    next(new Error('token not valid'));
-  } else {
-    res.json({ user: req.user });
-  }
 };
 
 // get list of following users
@@ -134,7 +154,11 @@ const user_get_list_follower = async (req, res, next) => {
 
 // follow a user
 const user_add_following = async (req, res, next) => {
-  const followingUser = await insertFollowingUser(req.user.user_id, req.params.followingId, next);
+  const followingUser = await insertFollowingUser(
+    req.user.user_id,
+    req.params.followingId,
+    next
+  );
   if (followingUser) {
     res.json(followingUser);
     return;
@@ -145,31 +169,45 @@ const user_add_following = async (req, res, next) => {
 
 // unfollow a user
 const user_delete_following = async (req, res, next) => {
-  const unfollowUser = await deleteFollowingUser(req.user.user_id, req.params.followingId, next);
+  const unfollowUser = await deleteFollowingUser(
+    req.user.user_id,
+    req.params.followingId,
+    next
+  );
   if (unfollowUser) {
     res.json(unfollowUser);
     return;
   }
   const err = httpError('data not valid', 400);
   next(err);
-}
+};
 
 // get all posts of following users on feed page
 const user_get_feed_post = async (req, res, next) => {
   const allFeedPosts = await getAllFeedPosts(req.user.user_id, next);
-  if(allFeedPosts) {
+  if (allFeedPosts) {
     res.json(allFeedPosts);
     return;
   }
   const err = httpError('posts not found', 404);
   next(err);
-}
+};
+
+// check token
+const checkToken = (req, res, next) => {
+  if (!req.user) {
+    next(new Error('token not valid'));
+  } else {
+    res.json({ user: req.user });
+  }
+};
 
 module.exports = {
   user_list_get,
   user_get,
   user_delete,
   user_update,
+  user_update_picture,
   user_get_posts,
   user_get_favorites,
   user_get_list_following,
