@@ -38,7 +38,7 @@ const router = express.Router();
 // Group the routes to avoid duplicate route naming
 router
   .route('/')
-  .get(post_random)
+  .get(post_random)  // get all posts randomly with limit query number of posts
   .post(
     upload.single('image'),
     body('title').notEmpty(),

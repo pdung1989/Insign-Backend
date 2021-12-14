@@ -3,7 +3,7 @@ const pool = require('../database/db');
 const { httpError } = require('../utils/errors');
 const promisePool = pool.promise();
 
-// access db to get all role_name with role_id
+// access db to get all roles
 const getAllRoles = async (next) => {
   try {
     const [rows] = await promisePool.execute('SELECT * FROM role ORDER BY role_id ASC');

@@ -224,7 +224,7 @@ const deleteFromFavorite = async (postId, userId, next) => {
   }
 };
 
-// get all posts from professional/designer (role_id=2)
+// get posts from professional/designer, order randomly, limit with 2 posts (role_id=2)
 const getProfessionalPosts = async (next) => {
   try {
     const [rows] = await promisePool.execute(

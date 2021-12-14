@@ -3,6 +3,7 @@ const pool = require('../database/db');
 const { httpError } = require('../utils/errors');
 const promisePool = pool.promise();
 
+// access db to get all styles
 const getAllStyles = async (next) => {
   try {
     const [rows] = await promisePool.execute('SELECT * FROM style ORDER BY style_id DESC');
