@@ -13,7 +13,7 @@ const { httpError } = require('../utils/errors');
 // get all comments
 const comment_list_get = async (req, res, next) => {
   const comments = await getAllComments(next);
-  if (comments.length === 0) {
+  if (!comments) {
     const err = httpError('Comments not found', 404);
     next(err);
     return;
@@ -67,7 +67,7 @@ const comment_delete = async (req, res, next) => {
 const comment_update = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.error('comment_post validation', errors.array());
+    console.error('comment_update validation', errors.array());
     const err = httpError('data not valid', 400);
     next(err);
     return;

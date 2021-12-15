@@ -105,9 +105,8 @@ const user_update_picture = async (req, res, next) => {
 
 // update user password
 const user_update_password = async (req, res, next) => {
-  console.log(req.body);
   const errors = validationResult(req);
-  if(req.body.password !== req.body.password2 || !errors.isEmpty()) {
+  if (req.body.password !== req.body.password2 || !errors.isEmpty()) {
     const error = httpError("Password doesn't match", 400);
     next(error);
     return;
@@ -115,8 +114,8 @@ const user_update_password = async (req, res, next) => {
   try {
     req.body.password = bcrypt.hashSync(req.body.password, 12); // has password
     const updatedUserPassword = await updateUserPassword(
-        req.body,
-        req.user.user_id,
+      req.body,
+      req.user.user_id
     );
     res.json({ message: 'user password is updated', updatedUserPassword });
   } catch (e) {

@@ -34,16 +34,15 @@ const user_post = async (req, res, next) => {
     next(err);
     return;
   }
-  console.log('added new user data');
-   // require types of image file when adding user
-   if (!req.file) {
-     const err = httpError('Invalid file', 400);
-     next(err);
-     return;
-   }
+  // require types of image file when adding user
+  if (!req.file) {
+    const err = httpError('Invalid file', 400);
+    next(err);
+    return;
+  }
   try {
     // check if the password and the retype password are matched
-    if(req.body.password[0] !== req.body.password[1]) {
+    if (req.body.password[0] !== req.body.password[1]) {
       const error = httpError('password not match', 400);
       next(error);
       return;
@@ -51,7 +50,7 @@ const user_post = async (req, res, next) => {
     req.body.password = bcrypt.hashSync(req.body.password[0], 12); // password is hashed when user registers
     req.body.profile_picture = req.file.filename;
     const user = await insertUser(req.body);
-    res.json({message: `user added with id: ${user.insertId}`, user: user });  
+    res.json({ message: `user added with id: ${user.insertId}`, user: user });
   } catch (e) {
     console.log('user post error', e.message);
     const err = httpError('Bad request', 400);
@@ -61,7 +60,7 @@ const user_post = async (req, res, next) => {
 
 const logout = (req, res) => {
   req.logout();
-  res.json({message: 'logout'});
+  res.json({ message: 'logout' });
 };
 
 module.exports = {
