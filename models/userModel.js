@@ -226,7 +226,7 @@ const deleteFollowingUser = async (userId, followingId, next) => {
 const getAllFeedPosts = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post.post_id, post.author, u.username, u.profile_picture, post.title, post.image, post.description, ' +
+      'SELECT post.post_id, post.author, u.username, u.role_id, u.profile_picture, post.title, post.image, post.description, ' +
         '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
         '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
         '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = f.user_id) as self_like ' +

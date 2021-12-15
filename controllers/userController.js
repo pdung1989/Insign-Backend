@@ -63,12 +63,6 @@ const user_update = async (req, res, next) => {
     return;
   }
   try {
-    // check if the password and the retype password are matched
-    if(req.body.password[0] !== req.body.password[1]) {
-      const error = httpError('password not match', 400);
-      next(error);
-      return;
-    }
     req.body.password = bcrypt.hashSync(req.body.password[0], 12); // has password when password is updated
     const updatedUser = await updateUser(req.user.user_id, req.body);
     res.json({ message: 'user is updated', updatedUser });
