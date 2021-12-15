@@ -112,3 +112,6 @@ uploads/*
 certrequest.csr
 ssl-cert.pem
 ssl-key.pem
+
+# OS
+.DS_Store
