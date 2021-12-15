@@ -42,12 +42,13 @@ const user_post = async (req, res, next) => {
      return;
    }
   try {
+    // check if the password and the retype password are matched
     if(req.body.password[0] !== req.body.password[1]) {
       const error = httpError('password not match', 400);
       next(error);
       return;
     }
-    req.body.password = bcrypt.hashSync(req.body.password, 12); // password is hashed when user registers
+    req.body.password = bcrypt.hashSync(req.body.password[0], 12); // password is hashed when user registers
     req.body.profile_picture = req.file.filename;
     const user = await insertUser(req.body);
     res.json({message: `user added with id: ${user.insertId}`, user: user });  

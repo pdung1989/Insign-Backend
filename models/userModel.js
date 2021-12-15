@@ -76,16 +76,13 @@ const deleteUser = async (userId, role_id, next) => {
   return false;
 };
 
-// update user
+// update user information
 const updateUser = async (userId, user, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'UPDATE insign_user SET username = ?, email = ?, password = ?, profile_picture = ?, bio= ?, role_id = ? WHERE user_id = ?',
+      'UPDATE insign_user SET username = ?, bio = ?, role_id = ? WHERE user_id = ?',
       [
         user.username,
-        user.email,
-        user.password,
-        user.profile_picture,
         user.bio || null,
         user.role_id,
         userId,
@@ -94,6 +91,43 @@ const updateUser = async (userId, user, next) => {
     return rows.affectedRows === 1;
   } catch (e) {
     console.error('model update user', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// update user's profile picture
+const updateProfilePicture = async (user, userId, next) => {
+  try {
+    const [rows] = await promisePool.execute(
+      'UPDATE insign_user SET profile_picture = ? WHERE user_id = ?',
+      [
+        user.profile_picture,
+        userId,
+      ]
+    );
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.error('model update user profile picture', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// update user's password
+const updateUserPassword = async (user, userId, next) => {
+  try {
+    console.log(userId);
+    const [rows] = await promisePool.execute(
+        'UPDATE insign_user SET password = ? WHERE user_id = ?',
+        [
+          user.password,
+          userId,
+        ]
+    );
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.error('model update user password', e.message);
     const err = httpError('Sql error', 500);
     next(err);
   }
@@ -210,7 +244,7 @@ const deleteFollowingUser = async (userId, followingId, next) => {
 const getAllFeedPosts = async (userId, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT post.post_id, post.author, u.username, u.profile_picture, post.title, post.image, post.description, ' +
+      'SELECT post.post_id, post.author, u.username, u.role_id, u.profile_picture, post.title, post.image, post.description, ' +
         '(SELECT count(*) from likes WHERE likes.post_id = post.post_id) as num_likes, ' +
         '(SELECT count(*) from comment WHERE comment.post_id = post.post_id) as num_comments, ' +
         '(SELECT count(*) from likes where likes.post_id = post.post_id and likes.user_id = f.user_id) as self_like ' +
@@ -249,6 +283,8 @@ module.exports = {
   insertUser,
   deleteUser,
   updateUser,
+  updateProfilePicture,
+  updateUserPassword,
   getAllPostsOfUser,
   getFavoritePosts,
   getUserLogin,

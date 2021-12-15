@@ -5,7 +5,7 @@ const { httpError } = require('../utils/errors');
 
 const role_get = async (req, res, next) => {
   const roles = await getAllRoles(next);
-  if (roles.length === 0) {
+  if (!roles) {
     const err = httpError('roles not found', 404);
     next(err);
     return;

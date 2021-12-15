@@ -107,3 +107,4 @@ ALTER TABLE `likes` ADD FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`);
 
 ALTER TABLE `add_to_favorite` ADD FOREIGN KEY (`user_id`) REFERENCES `insign_user` (`user_id`);
 ALTER TABLE `add_to_favorite` ADD FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`);
+

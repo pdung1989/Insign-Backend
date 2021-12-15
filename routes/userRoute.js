@@ -13,14 +13,16 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb(null, false);
   }
-}
+};
 // create upload middleware
-const upload = multer({ dest: './uploads/', fileFilter});
+const upload = multer({ dest: './uploads/', fileFilter });
 const {
   user_get,
   user_list_get,
   user_delete,
   user_update,
+  user_update_picture,
+  user_update_password,
   user_get_posts,
   user_get_favorites,
   user_get_list_following,
@@ -36,17 +38,21 @@ const router = express.Router();
 router.route('/')
   .get(user_list_get)
   .put(
-    upload.single('profile_picture'),
     body('username').isLength({ min: 3 }),
-    body('email').isEmail(),
-    body('password').matches('(?=.*[A-Z]).{8,}'),
-    user_update);
+    user_update
+  );
 
-router.route('/feed')
-    .get(user_get_feed_post);
+router.route('/profilePicture')
+  .put(upload.single('profile_picture'), user_update_picture);
 
-router.route('/following')
-  .get(user_get_list_following);
+router.route('/password')
+    .put(body('password').matches('(?=.*[A-Z]).{8,}'),
+        body('password2').matches('(?=.*[A-Z]).{8,}'),
+        user_update_password);
+
+router.route('/feed').get(user_get_feed_post);
+
+router.route('/following').get(user_get_list_following);
 
 router.route('/following/:followingId')
   .post(user_add_following)
