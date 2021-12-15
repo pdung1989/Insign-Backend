@@ -154,7 +154,7 @@ const user_get_list_following = async (req, res, next) => {
     res.json(followingUsers);
     return;
   }
-  const err = httpError(' following users not found', 404);
+  const err = httpError('following users not found', 404);
   next(err);
 };
 

@@ -36,8 +36,7 @@ const {
 const router = express.Router();
 
 // Group the routes to avoid duplicate route naming
-router
-  .route('/')
+router.route('/')
   .get(post_random)  // get all posts randomly with limit query number of posts
   .post(
     upload.single('image'),
@@ -47,11 +46,12 @@ router
     post_post
   );
 
-router.get('/search', post_search);
-router.get('/professional', professtional_list_get);
+router.route('/search')
+  .get(post_search);
+router.route('/professional')
+  .get(professtional_list_get);
 
-router
-  .route('/:postId')
+router.route('/:postId')
   .get(post_get)
   .put(
     body('title').notEmpty(),

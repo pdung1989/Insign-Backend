@@ -50,9 +50,11 @@ router.route('/password')
         body('password2').matches('(?=.*[A-Z]).{8,}'),
         user_update_password);
 
-router.route('/feed').get(user_get_feed_post);
+router.route('/feed')
+  .get(user_get_feed_post);
 
-router.route('/following').get(user_get_list_following);
+router.route('/following')
+  .get(user_get_list_following);
 
 router.route('/following/:followingId')
   .post(user_add_following)
@@ -65,8 +67,11 @@ router.route('/:userId')
   .get(user_get)
   .delete(user_delete);
 
-router.get('/:userId/post', user_get_posts);
-router.get('/:userId/favorites', user_get_favorites);
+router.route('/:userId/post')
+  .get(user_get_posts);
+router.route('/:userId/favorites')
+  .get(user_get_favorites);
+  
 router.get('/token', checkToken);
 
 module.exports = router;

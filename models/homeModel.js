@@ -5,7 +5,9 @@ const promisePool = pool.promise();
 
 const getHomePictures = async (req, next) => {
   try {
-    const [rows] = await promisePool.execute('SELECT title, image FROM post ORDER BY RAND () LIMIT 5');
+    const [rows] = await promisePool.execute(
+      'SELECT title, image FROM post ORDER BY RAND () LIMIT 5'
+    );
     return rows;
   } catch (error) {
     console.log(error.message);
