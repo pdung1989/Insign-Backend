@@ -80,10 +80,9 @@ const deleteUser = async (userId, role_id, next) => {
 const updateUser = async (userId, user, next) => {
   try {
     const [rows] = await promisePool.execute(
-      'UPDATE insign_user SET username = ?, password = ?, bio = ?, role_id = ? WHERE user_id = ?',
+      'UPDATE insign_user SET username = ?, bio = ?, role_id = ? WHERE user_id = ?',
       [
         user.username,
-        user.password,
         user.bio || null,
         user.role_id,
         userId,
@@ -110,6 +109,25 @@ const updateProfilePicture = async (user, userId, next) => {
     return rows.affectedRows === 1;
   } catch (e) {
     console.error('model update user profile picture', e.message);
+    const err = httpError('Sql error', 500);
+    next(err);
+  }
+};
+
+// update user's password
+const updateUserPassword = async (user, userId, next) => {
+  try {
+    console.log(userId);
+    const [rows] = await promisePool.execute(
+        'UPDATE insign_user SET password = ? WHERE user_id = ?',
+        [
+          user.password,
+          userId,
+        ]
+    );
+    return rows.affectedRows === 1;
+  } catch (e) {
+    console.error('model update user password', e.message);
     const err = httpError('Sql error', 500);
     next(err);
   }
@@ -266,6 +284,7 @@ module.exports = {
   deleteUser,
   updateUser,
   updateProfilePicture,
+  updateUserPassword,
   getAllPostsOfUser,
   getFavoritePosts,
   getUserLogin,

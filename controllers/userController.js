@@ -13,6 +13,7 @@ const {
   deleteFollowingUser,
   getAllFeedPosts,
   updateProfilePicture,
+  updateUserPassword,
 } = require('../models/userModel');
 const { httpError } = require('../utils/errors');
 const bcrypt = require('bcryptjs');
@@ -63,7 +64,6 @@ const user_update = async (req, res, next) => {
     return;
   }
   try {
-    req.body.password = bcrypt.hashSync(req.body.password[0], 12); // has password when password is updated
     const updatedUser = await updateUser(req.user.user_id, req.body);
     res.json({ message: 'user is updated', updatedUser });
   } catch (e) {
@@ -98,6 +98,29 @@ const user_update_picture = async (req, res, next) => {
     res.json({ message: 'user profile picture is updated', profilePicture });
   } catch (e) {
     console.log('user update profile picture error', e.message);
+    const err = httpError('Bad request', 400);
+    next(err);
+  }
+};
+
+// update user password
+const user_update_password = async (req, res, next) => {
+  console.log(req.body);
+  const errors = validationResult(req);
+  if(req.body.password !== req.body.password2 || !errors.isEmpty()) {
+    const error = httpError("Password doesn't match", 400);
+    next(error);
+    return;
+  }
+  try {
+    req.body.password = bcrypt.hashSync(req.body.password, 12); // has password
+    const updatedUserPassword = await updateUserPassword(
+        req.body,
+        req.user.user_id,
+    );
+    res.json({ message: 'user password is updated', updatedUserPassword });
+  } catch (e) {
+    console.log('user password update error', e.message);
     const err = httpError('Bad request', 400);
     next(err);
   }
@@ -203,6 +226,7 @@ module.exports = {
   user_delete,
   user_update,
   user_update_picture,
+  user_update_password,
   user_get_posts,
   user_get_favorites,
   user_get_list_following,
