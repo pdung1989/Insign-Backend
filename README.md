@@ -12,9 +12,22 @@ Insign mainly targets three groups of user and divides its features accordingly.
 ## Presentation
 A first look to Insign
 <!-- Add a screenshot of a working app with some nice post display from database -->
+
+## Server for database, back-end and front-end:
+- Connect metropolia vpn 
+- Database is running on user metropolia server, (https://users.metropolia.fi/phpMyAdmin)
+- Backend is on remote server of educloud virtual machine, (http://10.114.32.129/app/home)
+- Frontend is on remote server, (http://10.114.32.129/~dtran/Insign-Frontend/home/home.html)
+
+## Production server and Deployment:
+- Generate a self-signed certificate for CentOS
+- Configure apache httpd proxy for https on virtual machine to run Node app - [Apach http proxy](https://github.com/ilkkamtk/wop/blob/master/week5.md)
+- Upload back-end part to the virtual server and run
+- Use Pm2 for automatic loading and running app
+- App is running on port 3000 on production server.
 ## Installation
 
-This is a project, which is uploaded in two separate GitHub repositories. You can find the [backend here](https://github.com/pdung1989/Insign-Backend) and you will also need a MySQL server in order to properly run Insign.
+This is a project, which is uploaded in two separate GitHub repositories. You can find the [front-end here](https://github.com/pdung1989/Insign-Frontend) and you will also need a MySQL server in order to properly run Insign.
 
 1. Git clone the frontend and the backend into 2 separate directories in your local machine
 2. Install [WebStorm](https://www.jetbrains.com/webstorm/) or [Visual Studio Code](https://code.visualstudio.com/) (whichever you prefer)
@@ -22,7 +35,7 @@ This is a project, which is uploaded in two separate GitHub repositories. You ca
 ```bash
 npm i
 ```
-4. Open the insign-databse.txt file in the backend and paste all the content into the MySQL server's input field(CHANGE LATER, IDK WHAT TO WRITE HERE)
+4. Open the insign-databse.txt file in the backend and paste all the content into the MySQL server's input field
 5. Add a .env file to the backend folder and fill out the empty fields (to connect your backend to the MySQL database
 ```bash
 DB_HOST=
@@ -37,7 +50,7 @@ const url = 'http://localhost:3000';
 ```
 7. Open the frontend's 'home' html file in the Live Server on WebStorm or install [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) on Visual Studio Code and run the frontend there.
 8. Create an account and have fun :)
-
+ 
 ## Usage
 
 SOMETHING
