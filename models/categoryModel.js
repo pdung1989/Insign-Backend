@@ -9,7 +9,6 @@ const getAllCategories = async (next) => {
     const [rows] = await promisePool.execute(
       'SELECT * FROM category ORDER BY category_id DESC;'
     );
-    console.log(rows);
     return rows;
   } catch (e) {
     console.log('error', e.message);

@@ -5,7 +5,7 @@ const { httpError } = require('../utils/errors');
 
 const style_get = async (req, res, next) => {
   const styles = await getAllStyles(next);
-  if (styles.length === 0) {
+  if (!styles) {
     const err = httpError('Styles not found', 404);
     next(err);
     return;
