@@ -18,12 +18,10 @@ const roleRoute = require('./routes/roleRoute.js');
 const app = express();
 const port = 3000;
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-if (process.env.NODE_ENV === 'production') {
-  require('./utils/production')(app, port);
-} else {
-  require('./utils/localhost')(app, 8000, port);
-}
+// process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+// process.env.NODE_ENV === 'production'
+require('./utils/production')(app, port);
+
 
 app.use(cors());
 
