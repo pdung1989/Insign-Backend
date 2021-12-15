@@ -16,13 +16,13 @@ const homeRoute = require('./routes/homeRoute');
 const roleRoute = require('./routes/roleRoute.js');
 
 const app = express();
-const port = 3000;
+//const port = 3000;
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 if (process.env.NODE_ENV === 'production') {
-  require('./utils/production')(app, port);
+  require('./utils/production')(app, process.env.PORT || 3000);
 } else {
-  require('./utils/localhost')(app, 8000, port);
+  require('./utils/localhost')(app, process.env.HTTPS_PORT || 8000, process.env.PORT || 3000);
 }
 
 app.use(cors());
