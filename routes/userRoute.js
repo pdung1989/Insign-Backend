@@ -22,6 +22,7 @@ const {
   user_delete,
   user_update,
   user_update_picture,
+  user_update_password,
   user_get_posts,
   user_get_favorites,
   user_get_list_following,
@@ -38,12 +39,16 @@ router.route('/')
   .get(user_list_get)
   .put(
     body('username').isLength({ min: 3 }),
-    body('password').matches('(?=.*[A-Z]).{8,}'),
     user_update
   );
 
 router.route('/profilePicture')
   .put(upload.single('profile_picture'), user_update_picture);
+
+router.route('/password')
+    .put(body('password').matches('(?=.*[A-Z]).{8,}'),
+        body('password2').matches('(?=.*[A-Z]).{8,}'),
+        user_update_password);
 
 router.route('/feed').get(user_get_feed_post);
 
