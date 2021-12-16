@@ -9,19 +9,15 @@ Insign mainly targets three groups of user and divides its features accordingly.
 2. Hobbyists - people who want to involve in the related topics and registerd themselves as 'user'. Available features: Add posts, like and add posts to favorite list, comment on others' posts and browse the latest posts by people they are following.
 3. Designers - suited for professionals in architecture, construction, engineering and commercial interior design. Besides having all the functionalities of a user, 'Designer/Professional' users can also promote and have their works approached potential customers more easily with the 'boost post' suggestion feature.
 
-## Presentation
-A first look to Insign
- 
- <img src="/assets/Insign-demo.png" width="300">  <img src="/assets/Insign-demo2.png" width="300"> <img src="/assets/Insign-demo3.png" width="300">
 
 ## Stacks, tools, libraries:
-1. Front-end: using AJAX, HTML5, CSS, responsive design
-2. Back-end: 
-- Using Node.js with express library 
+The Back-end part of Insign makes use of: 
+
+- Node.js with express library 
 - Authentication using Passport library, Local Storage strategy, JWT Strategy
 - Validation using express-validator 
 - Hashing password with bryptjs package and JWT_SECRET
-3. Database: mySQL2, phpMyAdmin tool
+- Database: mySQL2, phpMyAdmin tool
 
 ## Server for database, back-end and front-end:
 - Connect metropolia vpn 
