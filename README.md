@@ -36,16 +36,15 @@ A first look to Insign
 - Node app is running on port 3000 of production server.
 ## Installation
 
-This is a project, which is uploaded in two separate GitHub repositories. You can find the [front-end here](https://github.com/pdung1989/Insign-Frontend) and you will also need a MySQL server in order to properly run Insign.
-
-1. Git clone the frontend and the backend into 2 separate directories in your local machine
+1. Git clone the [frontend](https://github.com/pdung1989/Insign-Frontend) and [the backend](https://github.com/pdung1989/Insign-Backend)(**master** branch) into 2 separate directories in your local machine. If you want to redirect from http to https, git clone branch **production**)
 2. Install [WebStorm](https://www.jetbrains.com/webstorm/) or [Visual Studio Code](https://code.visualstudio.com/) (whichever you prefer)
 3. Open the backend folder in WebStorm or Visual Studio Code and install Node.js + all required dependencies:
 ```bash
 npm i
 ```
-4. Open the insign-databse.txt file in the backend and paste all the content into the MySQL server's input field
-5. Add a .env file to the backend folder and fill out the empty fields (to connect your backend to the MySQL database
+4. Install [phpMyAdmin](https://www.phpmyadmin.net/) pflatform
+5. Open the insign-databse.txt file in the backend and paste all the content into the MySQL server's input field
+6. Add a .env file to the backend folder and fill out the empty fields (to connect your backend to the MySQL database
 ```bash
 DB_HOST=
 DB_USER=
