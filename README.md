@@ -36,7 +36,7 @@ A first look to Insign
 - Node app is running on port 3000 of production server.
 ## Installation
 
-1. Git clone the [frontend](https://github.com/pdung1989/Insign-Frontend) and [the backend](https://github.com/pdung1989/Insign-Backend)(**master** branch) into 2 separate directories in your local machine. If you want to redirect from http to https, git clone branch **production**)
+1. Git clone the [frontend](https://github.com/pdung1989/Insign-Frontend) and [the backend](https://github.com/pdung1989/Insign-Backend) (**master** branch) into 2 separate directories in your local machine. If you want to redirect from http to https, git clone branch **production**)
 2. Install [WebStorm](https://www.jetbrains.com/webstorm/) or [Visual Studio Code](https://code.visualstudio.com/) (whichever you prefer)
 3. Open the backend folder in WebStorm or Visual Studio Code and install Node.js + all required dependencies:
 ```bash
