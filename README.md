@@ -61,10 +61,6 @@ const url = 'http://localhost:3000';
 ```
 7. Open the frontend's 'home' html file in the Live Server on WebStorm or install [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) on Visual Studio Code and run the frontend there.
 8. Create an account and have fun :)
- 
-## Usage
-
-SOMETHING
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
