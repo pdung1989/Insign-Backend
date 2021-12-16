@@ -45,7 +45,7 @@ npm i
 ```bash
 node app.js
 ```
-4. Install [phpMyAdmin](https://www.phpmyadmin.net/) pflatform
+4. Install [phpMyAdmin](https://www.phpmyadmin.net/) platform
 5. Open the insign-databse.txt file in the backend and paste all the content into the MySQL server's input field
 6. Add a .env file to the backend folder and fill out the empty fields (to connect your backend to the MySQL database
 ```bash
