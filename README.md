@@ -20,7 +20,7 @@ A first look to Insign
 - Authentication using Passport library, Local Storage strategy, JWT Strategy
 - Validation using express-validator 
 - Hashing password with bryptjs package and JWT_SECRET
-- 
+
 ## Server for database, back-end and front-end:
 - Connect metropolia vpn 
 - Database is running on user metropolia server, (https://users.metropolia.fi/phpMyAdmin)
