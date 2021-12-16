@@ -1,4 +1,4 @@
-# Insign-Frontend
+# Insign-App
 ## Overview
 Welcome to Insign! This is a home decoration and interior design web platform where people can seek inspirations or communicate their ideas with everyone involved. Insign is readily available and user friendly for people who are dreaming up a perfect home to be their own interior designer.
 > See the good in yourself and in others.
@@ -13,18 +13,26 @@ Insign mainly targets three groups of user and divides its features accordingly.
 A first look to Insign
 <!-- Add a screenshot of a working app with some nice post display from database -->
 
+## Stacks, tools, libraries:
+1. Front-end: using AJAX, HTML5, CSS, responsive design
+2. Back-end: 
+- Using Node.js with express library 
+- Authentication using Passport library, Local Storage strategy, JWT Strategy
+- Validation using express-validator 
+- Hashing password with bryptjs package and JWT_SECRET
+- 
 ## Server for database, back-end and front-end:
 - Connect metropolia vpn 
 - Database is running on user metropolia server, (https://users.metropolia.fi/phpMyAdmin)
 - Backend is on remote server of educloud virtual machine, (http://10.114.32.129/app/home)
 - Frontend is on remote server, (http://10.114.32.129/~dtran/Insign-Frontend/home/home.html)
 
-## Production server and Deployment:
+## Production server and deployment:
 - Generate a self-signed certificate for CentOS
 - Configure apache httpd proxy for https on virtual machine to run Node app - [Apach http proxy](https://github.com/ilkkamtk/wop/blob/master/week5.md)
 - Upload back-end part to the virtual server and run
 - Use Pm2 for automatic loading and running app
-- App is running on port 3000 on production server.
+- Node app is running on port 3000 of production server.
 ## Installation
 
 This is a project, which is uploaded in two separate GitHub repositories. You can find the [front-end here](https://github.com/pdung1989/Insign-Frontend) and you will also need a MySQL server in order to properly run Insign.
