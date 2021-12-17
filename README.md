@@ -23,7 +23,7 @@ The Back-end part of Insign makes use of:
 - Connect metropolia vpn 
 - Database is running on user metropolia server, (https://users.metropolia.fi/phpMyAdmin)
 - Backend is on remote server of educloud virtual machine, (https://10.114.32.129/app/home)
-- Frontend is on remote server, (http://10.114.32.129/~dtran/Insign-Frontend/home/home.html)
+- Frontend is on remote server, (https://10.114.32.129/~dtran/Insign-Frontend/home/home.html)
 
 ## Production server and deployment:
 - Generate a self-signed certificate for CentOS
@@ -50,6 +50,7 @@ DB_HOST=
 DB_USER=
 DB_PASS=
 DB_NAME=
+JWT_SECRET=
 ```
 6. If you're running the backend server on your local machine, change all the 'url' variables in the frontend JS files to localhost (if you're on a virtual machine, make sure that the address points to your active Node.js backend
 ```javascript
