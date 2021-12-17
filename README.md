@@ -22,7 +22,7 @@ The Back-end part of Insign makes use of:
 ## Server for database, back-end and front-end:
 - Connect metropolia vpn 
 - Database is running on user metropolia server, (https://users.metropolia.fi/phpMyAdmin)
-- Backend is on remote server of educloud virtual machine, (http://10.114.32.129/app/home)
+- Backend is on remote server of educloud virtual machine, (https://10.114.32.129/app/home)
 - Frontend is on remote server, (http://10.114.32.129/~dtran/Insign-Frontend/home/home.html)
 
 ## Production server and deployment:
