@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -17,6 +18,13 @@ const roleRoute = require('./routes/roleRoute.js');
 const app = express();
 const port = 3000;
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+if (process.env.NODE_ENV === 'production') {
+  require('./utils/production')(app, port);
+} else {
+  require('./utils/localhost')(app, 8000, port);
+}
+
 app.use(cors());
 
 // for parsing data
@@ -31,7 +39,11 @@ app.use('/uploads', express.static('uploads'));
 app.use('/auth', authRoute);
 app.use('/post', passport.authenticate('jwt', { session: false }), postRoute);
 app.use('/user', passport.authenticate('jwt', { session: false }), userRoute);
-app.use('/comment', passport.authenticate('jwt', { session: false }),commentRoute);
+app.use(
+  '/comment',
+  passport.authenticate('jwt', { session: false }),
+  commentRoute
+);
 app.use('/home', homeRoute);
 app.use('/category', categoryRoute);
 app.use('/style', styleRoute);
@@ -39,19 +51,21 @@ app.use('/role', roleRoute);
 
 // hash password
 app.get('/', async (req, res) => {
+  if(req.secure) {
     res.send(await bcrypt.hash('admin', 10));
+  } else {
+    res.send('not secured?');
+  } 
 });
 
 // handling error
 app.use((req, res, next) => {
   const err = httpError('Not found', 404);
   next(err);
-})
+});
 
 // error handler
 app.use((err, req, res, next) => {
   const status = err.status || 500;
-  res.status(status).json({message: err.message || 'internal error'});
+  res.status(status).json({ message: err.message || 'internal error' });
 });
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
